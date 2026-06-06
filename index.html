@@ -286,7 +286,43 @@ const RECIPES = [
    steps:['豚を炒める','豆腐・小松菜・しめじ・にんじんをめんつゆで煮る','ご飯を添える']},
   {id:'D16', type:'dinner', name:'鶏もも唐揚げ風とキャベツ', time:20, cuisine:'和', main:'鶏', comp:['P','V','C'],
    use:{chicken_t:170,garlic:4,ginger:4,soy:12,oil:10,cabbage:0.15,rice:100,minitomato:0.25},
-   steps:['鶏に下味をつけ片栗(代用)で揚げ焼き','キャベツを千切りにしトマトを添える','ご飯を添える']}
+   steps:['鶏に下味をつけ片栗(代用)で揚げ焼き','キャベツを千切りにしトマトを添える','ご飯を添える']},
+  {id:'D17', type:'dinner', name:'回鍋肉風（鶏ももとキャベツ）', time:16, cuisine:'中', main:'鶏', comp:['P','V','C'],
+   use:{chicken_t:140,cabbage:0.2,piman:1,miso:14,sugar:4,sesoil:4,rice:100},
+   steps:['鶏ももとキャベツ・ピーマンを炒める','味噌・砂糖で味付け','ご飯を添える']},
+  {id:'D18', type:'dinner', name:'豆腐ハンバーグと温野菜', time:20, cuisine:'洋', main:'豆腐', comp:['P','V','C'],
+   use:{tofu:0.7,mince:80,onion:0.5,egg:0.5,mixveg:40,broccoli:0.2,soy:8,sugar:4,rice:90,oil:4},
+   steps:['豆腐とひき肉・玉ねぎ・卵を混ぜ成形','焼いて醤油・砂糖で味付け','ブロッコリーと付け合わせ・ご飯']},
+  {id:'D19', type:'dinner', name:'さばの味噌煮', time:18, cuisine:'和', main:'さば', comp:['P','V','C'],
+   use:{saba:1,negi:0.3,ginger:4,miso:16,sugar:6,daikon:0.15,rice:100},
+   steps:['さばを生姜・味噌・砂糖で煮る','大根とねぎを添える','ご飯を添える']},
+  {id:'D20', type:'dinner', name:'鶏むねのトマト煮込み', time:20, cuisine:'洋', main:'鶏', comp:['P','V','C'],
+   use:{chicken_b:150,onion:0.5,minitomato:0.5,piman:1,garlic:4,oil:4,rice:100},
+   steps:['鶏むねと玉ねぎ・ピーマンを炒める','トマトとにんにくで煮込む','ご飯を添える']},
+  {id:'D21', type:'dinner', name:'野菜たっぷり玉子炒め', time:13, cuisine:'中', main:'卵', comp:['P','V','C'],
+   use:{egg:2,cabbage:0.12,carrot:0.3,moyashi:0.5,gara:3,sesoil:4,soy:5,rice:100},
+   steps:['野菜ともやしを炒める','溶き卵を加えて炒める','鶏ガラ・醤油で味付けご飯に']},
+  {id:'D22', type:'dinner', name:'ねばねば納豆丼', time:10, cuisine:'和', main:'納豆', comp:['P','V','C'],
+   use:{natto:1,egg:1,moyashi:0.5,komatsu:0.4,nori:1,soy:6,rice:120},
+   steps:['もやしと小松菜をさっと茹でる','ご飯に納豆・卵・野菜をのせる','海苔と醤油で仕上げ']},
+  {id:'D23', type:'dinner', name:'豚バラ大根', time:20, cuisine:'和', main:'豚', comp:['P','V','C'],
+   use:{pork_b:80,daikon:0.3,negi:0.3,soy:10,sugar:5,mentsuyu:10,rice:100},
+   steps:['豚バラと大根を炒める','水・醤油・砂糖・めんつゆで煮る','ねぎを散らしご飯に']},
+  {id:'D24', type:'dinner', name:'豆腐チャンプルー', time:15, cuisine:'中', main:'ツナ', comp:['P','V','C'],
+   use:{tofu:0.7,tuna:0.5,moyashi:1,carrot:0.2,egg:1,soy:8,sesoil:4,rice:100},
+   steps:['豆腐ともやし・にんじんを炒める','ツナと溶き卵を加える','醤油で味付けご飯に']},
+  {id:'B13', type:'breakfast', name:'ツナと野菜のスクランブルトースト', time:9, cuisine:'洋', main:'卵', comp:['P','C','V','D'],
+   use:{bread:1,egg:1,tuna:0.3,minitomato:0.25,oil:3,milk:100},
+   steps:['卵とツナをスクランブルにする','トーストにのせる','ミニトマトと牛乳を添える']},
+  {id:'B14', type:'breakfast', name:'具だくさん豚汁とご飯', time:14, cuisine:'和', main:'豚', comp:['P','V','C'],
+   use:{rice:90,pork_k:40,daikon:0.15,carrot:0.2,negi:0.2,miso:16,dashi:1},
+   steps:['豚と大根・にんじんを煮る','味噌を溶いて豚汁にする','ご飯を添える']},
+  {id:'B15', type:'breakfast', name:'野菜スープごはん', time:10, cuisine:'洋', main:'卵', comp:['P','V','C'],
+   use:{rice:80,mixveg:60,cabbage:0.1,gara:3,egg:1},
+   steps:['野菜を鶏ガラスープで煮る','溶き卵を回し入れる','ご飯を加える']},
+  {id:'B16', type:'breakfast', name:'焼き鮭と青菜のっけご飯', time:11, cuisine:'和', main:'鮭', comp:['P','V','C'],
+   use:{rice:100,salmon:0.5,komatsu:0.4,nori:1,soy:4},
+   steps:['鮭を焼いてほぐす','小松菜を茹でる','ご飯にのせ海苔と醤油で仕上げ']}
 ];
 
 const byId = arr => arr.reduce((m,x)=>(m[x.id]=x,m),{});
@@ -376,14 +412,17 @@ function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){
    ・朝7食/夜7食 重複なし
    ・夜は同じ主役を2日連続にしない（できる範囲で）
    ・各日が栄養バランスを満たすよう調整 */
-function generatePlan(seed){
+function generatePlan(seed, avoid){
+  avoid = avoid instanceof Set ? avoid : new Set(avoid||[]);
   const rng = mulberry32(seed>>>0);
-  const breakfast = shuffle(BREAKFASTS,rng).slice(0,7);
-  // 夜: 主役が連続しないように貪欲に7つ選ぶ
-  let pool = shuffle(DINNERS,rng);
+  const bShuf = shuffle(BREAKFASTS,rng);
+  const bFresh = bShuf.filter(id=>!avoid.has(id));
+  const breakfast = (bFresh.length>=7 ? bFresh : bFresh.concat(bShuf.filter(id=>avoid.has(id)))).slice(0,7);
+  const pool = shuffle(DINNERS,rng);
+  const order = pool.filter(id=>!avoid.has(id)).concat(pool.filter(id=>avoid.has(id)));
   const dinner=[]; let lastMain=null;
   const tryFill=(allowSameMain)=>{
-    for(const id of pool){
+    for(const id of order){
       if(dinner.includes(id)) continue;
       if(!allowSameMain && REC[id].main===lastMain) continue;
       dinner.push(id); lastMain=REC[id].main;
@@ -392,28 +431,25 @@ function generatePlan(seed){
     return false;
   };
   tryFill(false);
-  if(dinner.length<7){ tryFill(true); } // 足りなければ連続許可で補完
-  // 栄養バランスの局所改善: 各日の夜を未使用レシピと入れ替えて1日のペナルティを下げる
-  improveDinners(breakfast, dinner);
+  if(dinner.length<7){ tryFill(true); }
+  improveDinners(breakfast, dinner, avoid);
   return {breakfast, dinner, seed:seed>>>0};
 }
 /* 夜献立を入れ替えて栄養ペナルティを下げる（重複を保ったまま） */
-function improveDinners(breakfast, dinner){
+function improveDinners(breakfast, dinner, avoid){
+  avoid = avoid || new Set(); const AV=6;
   let improved=true, guard=0;
   while(improved && guard++<40){
     improved=false;
     for(let d=0; d<7; d++){
-      const cur=dayPenalty(breakfast[d],dinner[d]);
-      if(cur<=0) continue;
-      const used=new Set(dinner);
-      let bestId=null, bestPen=cur;
+      const cur=dayPenalty(breakfast[d],dinner[d]) + (avoid.has(dinner[d])?AV:0);
+      let bestId=null, bestScore=cur;
       for(const cand of DINNERS){
-        if(used.has(cand)) continue;
-        const pen=dayPenalty(breakfast[d],cand);
-        // 主役の連続も避ける（できる範囲で）
+        if(dinner.includes(cand)) continue;
         const prevMain=d>0?REC[dinner[d-1]].main:null, nextMain=d<6?REC[dinner[d+1]].main:null;
         const consec=(REC[cand].main===prevMain||REC[cand].main===nextMain)?0.001:0;
-        if(pen+consec<bestPen-1e-9){ bestPen=pen+consec; bestId=cand; }
+        const score=dayPenalty(breakfast[d],cand)+consec+(avoid.has(cand)?AV:0);
+        if(score<bestScore-1e-9){ bestScore=score; bestId=cand; }
       }
       if(bestId){ dinner[d]=bestId; improved=true; }
     }
@@ -445,18 +481,20 @@ function weeklyNutrition(plan, ingMap){
 function chooseBestPlan(opts){
   opts = opts||{}; const tries = opts.tries||80; const budget = opts.budget||15000;
   const ingMap = opts.ingMap||ING; const startSeed = opts.startSeed || 1;
+  const avoid = opts.avoid instanceof Set ? opts.avoid : new Set(opts.avoid||[]);
   let best=null;
   for(let i=0;i<tries;i++){
     const seed = startSeed + i*2654435761 >>> 0;
-    const plan = generatePlan(seed);
+    const plan = generatePlan(seed, avoid);
     const pen = weeklyPenalty(plan, ingMap);
     const weekly = weeklyConsumedCost(plan, ingMap);
     const monthly = monthlyProjection(weekly);
     const over = Math.max(0, monthly-budget);
-    const objective = pen*1000 + over*8;
-    if(!best || objective<best.objective){ best={plan,pen,weekly,monthly,objective}; }
+    const reused = plan.breakfast.concat(plan.dinner).filter(id=>avoid.has(id)).length;
+    const objective = pen*1000 + over*8 + reused*40;
+    if(!best || objective<best.objective){ best={plan,objective}; }
   }
-  return best ? best.plan : generatePlan(startSeed);
+  return best ? best.plan : generatePlan(startSeed, avoid);
 }
 
 /* 買い物リスト生成: 週の必要量を集計→パック単位に切上げ
@@ -497,10 +535,56 @@ function applyPriceUpdate(ing, newPrice, dateStr, source){
   return true;
 }
 
+/* ===== レシートOCRの解析・学習（β） ===== */
+const ALIASES = {
+  egg:['たまご','タマゴ','玉子'], chicken_b:['とりむね','鶏ムネ','ムネ肉','鶏胸','鳥むね'],
+  chicken_t:['とりもも','鶏モモ','モモ肉','鶏腿','鳥もも'], pork_k:['豚こま','豚コマ','豚切','こま切れ','ぶた'],
+  pork_b:['豚バラ','バラ肉'], mince:['ひき肉','ミンチ','挽肉','合挽','合いびき'], salmon:['さけ','サケ','鮭','生鮭','塩鮭'],
+  saba:['さば','サバ','鯖'], tuna:['ツナ','まぐろ','シーチキン'], tofu:['とうふ','豆腐','木綿','絹'], natto:['なっとう','ナットウ'],
+  onion:['たまねぎ','タマネギ','玉葱'], carrot:['にんじん','ニンジン','人参'],
+  potato:['じゃがいも','ジャガイモ','馬鈴薯','メークイン','男爵'], cabbage:['きゃべつ','キャベツ'],
+  moyashi:['もやし','モヤシ'], spinach:['ほうれん草','ホウレンソウ','ほうれんそう'], komatsu:['小松菜','こまつな','コマツナ'],
+  broccoli:['ブロッコリー','ブロッコリ'], minitomato:['ミニトマト','プチトマト','トマト'], piman:['ピーマン'],
+  negi:['ねぎ','ネギ','長ねぎ','長ネギ','葱'], shimeji:['しめじ','シメジ'], daikon:['だいこん','大根','ダイコン'],
+  mixveg:['ミックスベジ','冷凍野菜'], milk:['牛乳','ミルク'], yogurt:['ヨーグルト'], cheese:['チーズ','スライスチーズ'],
+  banana:['バナナ'], rice:['こめ','お米','コメ','無洗米','精米'], bread:['食パン','パン'], pasta:['パスタ','スパゲ','マカロニ'],
+  udon:['うどん','ウドン'], oats:['オートミール','オーツ']
+};
+function parseReceiptPrice(line){
+  const nums=[...String(line).matchAll(/(\d[\d,]{0,6})/g)].map(m=>parseInt(m[1].replace(/,/g,''),10)).filter(v=>v>=10&&v<=99999);
+  return nums.length?nums[nums.length-1]:null;
+}
+function parseReceiptLines(text){
+  return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean)
+    .map(t=>({text:t, price:parseReceiptPrice(t)})).filter(o=>o.price!=null);
+}
+function matchReceiptLine(line, ingredients, learned){
+  learned = learned || {};
+  for(const ing of ingredients){
+    const keys=[ing.name].concat(ALIASES[ing.id]||[]).concat(learned[ing.id]||[]);
+    if(keys.some(k=>k && k.length>=1 && line.includes(k))) return ing.id;
+  }
+  return null;
+}
+function parseReceiptText(text, ingredients, learned){
+  const out=[], seen={};
+  for(const o of parseReceiptLines(text)){
+    const id=matchReceiptLine(o.text, ingredients, learned);
+    if(id && !seen[id]){ seen[id]=1; out.push({id, price:o.price, text:o.text}); }
+  }
+  return out;
+}
+/* レシート行から、学習用のキー（最長の日本語の連なり）を取り出す */
+function learnKeyFromLine(line){
+  const runs=String(line).match(/[぀-ヿ一-龯ｦ-ﾟ]{2,}/g)||[];
+  runs.sort((a,b)=>b.length-a.length);
+  return runs[0]||null;
+}
+
 const api = {INGREDIENTS,RECIPES,ING,REC,BREAKFASTS,DINNERS,TARGET,
   consumedCost,recipeNutrition,dayNutrition,evalNutrient,dayStatus,dayPenalty,
   dayComponents,dayBalanced,generatePlan,weeklyConsumedCost,weeklyPenalty,weeklyNutrition,
-  monthlyProjection,chooseBestPlan,buildShoppingList,applyPriceUpdate,mulberry32};
+  monthlyProjection,chooseBestPlan,buildShoppingList,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,ALIASES};
 if(typeof module!=='undefined' && module.exports){ module.exports=api; }
 root.Core = api;
 })(typeof window!=='undefined'?window:globalThis);
@@ -523,7 +607,8 @@ root.Core = api;
           <div class="muted" id="monthlyCost"></div>
         </div>
         <div style="text-align:right">
-          <button id="btnRegen">献立を作り直す</button>
+          <button id="btnRegen" class="ghost sm">別の案を見る</button>
+          <button id="btnConfirm" class="sm">この献立で確定</button>
           <div class="muted" style="margin-top:6px">予算 <span id="budgetLabel">¥15,000</span>/月</div>
         </div>
       </div>
@@ -539,6 +624,11 @@ root.Core = api;
 
     <div id="planArea"></div>
     <div class="hint">各日に栄養量と過不足を表示しています。献立カードをタップすると材料・作り方・栄養が見られます。「作り直す」で栄養と予算の両面から別の最適案を探します。</div>
+    <div class="card">
+      <details><summary>確定した献立の履歴（<span id="histCount">0</span>週分）</summary>
+        <div id="histArea" style="margin-top:8px"></div>
+      </details>
+    </div>
   </section>
 
   <!-- 買い物リストタブ -->
@@ -587,6 +677,9 @@ root.Core = api;
       <div class="legend">買い物のレシートを撮影し、買った品の金額を入れて保存。次回からその価格が使われ、グラフにも反映されます。</div>
       <input type="file" id="receiptFile" accept="image/*" capture="environment" style="margin:10px 0">
       <img id="receiptPreview" class="thumb" style="display:none" alt="レシート">
+      <button id="btnOcr" class="ghost sm" style="display:none;margin:6px 0">写真から金額を自動入力(β)</button>
+      <div id="ocrStatus" class="legend"></div>
+      <div id="ocrResult"></div>
       <input type="text" id="ingSearch" placeholder="食材名で絞り込み（例: 卵）" style="margin:8px 0">
       <div id="receiptList" style="max-height:46vh;overflow:auto"></div>
       <div class="row" style="margin-top:12px">
@@ -642,7 +735,7 @@ function freshState(){
     ...x, history:[{date:today,price:x.price,source:'初期推定'}]
   }));
   const plan = C.chooseBestPlan({budget:15000, ingMap:byIdLocal(ingredients), startSeed: (Date.now()>>>0)||1});
-  return {version:1, settings:{people:1,budget:15000}, ingredients, plan, receipts:[], costLog:[]};
+  return {version:1, settings:{people:1,budget:15000}, ingredients, plan, receipts:[], costLog:[], history:[], aliases:{}};
 }
 function byIdLocal(arr){return arr.reduce((m,x)=>(m[x.id]=x,m),{});}
 function ingMap(){return byIdLocal(state.ingredients);}
@@ -662,6 +755,8 @@ function migrate(s){
   C.INGREDIENTS.forEach(x=>{ if(!have.has(x.id)){
     s.ingredients.push({...x, history:[{date:todayStr(),price:x.price,source:'初期推定'}]}); }});
   if(!s.costLog) s.costLog=[];
+  if(!s.history) s.history=[];
+  if(!s.aliases) s.aliases={};
   if(!s.receipts) s.receipts=[];
   return s;
 }
@@ -788,8 +883,8 @@ $('#recipeModal').addEventListener('click',e=>{ if(e.target.id==='recipeModal') 
 
 /* ---------- 作り直す ---------- */
 $('#btnRegen').addEventListener('click',()=>{
-  state.plan = C.chooseBestPlan({budget:state.settings.budget, ingMap:ingMap(), startSeed:(Date.now()>>>0)||1});
-  persist(); renderMenu(); toast('新しい献立に切り替えました');
+  state.plan = C.chooseBestPlan({budget:state.settings.budget, ingMap:ingMap(), startSeed:(Date.now()>>>0)||1, avoid:recentAvoidSet(true)});
+  persist(); renderMenu(); toast('別の案に切り替えました');
 });
 
 /* ---------- 買い物リスト ---------- */
@@ -928,6 +1023,7 @@ $('#receiptFile').addEventListener('change',e=>{
       receiptImage=cv.toDataURL('image/jpeg',0.6);
       const p=$('#receiptPreview'); p.src=receiptImage; p.style.display='block';
       toast('レシート画像を読み込みました');
+      $('#btnOcr').style.display='inline-block'; $('#ocrStatus').textContent=''; $('#ocrResult').innerHTML='';
     };
     img.src=ev.target.result;
   };
@@ -963,6 +1059,94 @@ function renderReceiptHistory(){
   });
 }
 
+/* ---------- 履歴（確定した週の保存・表示） ---------- */
+function renderHistory(){
+  const area=$('#histArea'); if(!area) return;
+  const h=state.history||[]; const cnt=$('#histCount'); if(cnt) cnt.textContent=h.length;
+  if(!h.length){ area.innerHTML='<div class="empty">まだ確定した献立がありません。「この献立で確定」で1週間分を保存できます。</div>'; return; }
+  area.innerHTML='';
+  h.slice().reverse().forEach((w,ri)=>{
+    const idx=h.length-1-ri;
+    const dn=w.plan.dinner.map(id=>C.REC[id]?C.REC[id].name:id).join('、');
+    const div=document.createElement('div'); div.className='card'; div.style.margin='6px 0';
+    div.innerHTML=`<div class="row between"><b>${w.date} の週</b><span class="muted">月額 ${yen(w.monthly)}</span></div>
+      <div class="muted" style="margin-top:4px;font-size:12px">夜: ${dn}</div>
+      <div style="margin-top:6px"><button class="tiny ghost">この週を削除</button></div>`;
+    div.querySelector('button').addEventListener('click',()=>{ state.history.splice(idx,1); persist(); renderHistory(); toast('履歴を削除しました'); });
+    area.appendChild(div);
+  });
+}
+function recentAvoidSet(includeCurrent){
+  const ids=new Set();
+  if(includeCurrent && state.plan){ state.plan.breakfast.concat(state.plan.dinner).forEach(x=>ids.add(x)); }
+  (state.history||[]).slice(-2).forEach(w=>{ w.plan.breakfast.concat(w.plan.dinner).forEach(x=>ids.add(x)); });
+  return ids;
+}
+$('#btnConfirm').addEventListener('click',()=>{
+  const im=ingMap(); const weekly=C.weeklyConsumedCost(state.plan,im);
+  state.history=state.history||[];
+  state.history.push({date:todayStr(), plan:JSON.parse(JSON.stringify(state.plan)),
+    weekly:Math.round(weekly), monthly:Math.round(C.monthlyProjection(weekly))});
+  if(state.history.length>12) state.history=state.history.slice(-12);
+  state.plan=C.chooseBestPlan({budget:state.settings.budget, ingMap:im, startSeed:(Date.now()>>>0)||1, avoid:recentAvoidSet(false)});
+  persist(); renderMenu(); renderHistory();
+  toast('確定して履歴に保存。来週分の新しい献立を作りました');
+});
+
+/* ---------- レシートOCR（β・店ごとの商品名を学習） ---------- */
+function ingredientSelectHtml(){
+  const cats={carb:'主食',protein:'たんぱく',veg:'野菜',dairy:'卵・乳',fruit:'果物',season:'調味料'};
+  let h='<option value="">（食材を選ぶ）</option>';
+  ['carb','protein','veg','dairy','fruit','season'].forEach(cat=>{
+    h+=`<optgroup label="${cats[cat]}">`;
+    state.ingredients.filter(i=>i.cat===cat).forEach(i=>{ h+=`<option value="${i.id}">${i.name}</option>`; });
+    h+='</optgroup>';
+  });
+  return h;
+}
+async function ensureTesseract(){
+  if(window.Tesseract) return window.Tesseract;
+  await new Promise((res,rej)=>{ const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+  return window.Tesseract;
+}
+$('#btnOcr').addEventListener('click',async ()=>{
+  if(!receiptImage){ toast('先にレシート写真を選んでください'); return; }
+  const st=$('#ocrStatus'); st.textContent='読み取り中…（初回は文字辞書のダウンロードに少し時間がかかります）';
+  try{
+    const T=await ensureTesseract();
+    const {data}=await T.recognize(receiptImage,'jpn+eng');
+    handleOcrText(data.text);
+  }catch(e){ st.textContent='OCRを読み込めませんでした。オフライン時や読み取り失敗時は、お手数ですが金額を手入力してください。'; }
+});
+function handleOcrText(text){
+  $('#ingSearch').value=''; renderReceiptTab();
+  const im=ingMap();
+  const matched=C.parseReceiptText(text, state.ingredients, state.aliases||{});
+  let filled=0;
+  matched.forEach(mt=>{ const inp=$('#receiptList input[data-id="'+mt.id+'"]'); if(inp){ inp.value=mt.price; filled++; } });
+  const lines=C.parseReceiptLines(text).filter(o=>!C.matchReceiptLine(o.text, state.ingredients, state.aliases||{}));
+  const res=$('#ocrResult'); res.innerHTML='';
+  if(lines.length){
+    const note=document.createElement('div'); note.className='legend';
+    note.textContent='自動で分からなかった行です。食材を選ぶと金額が入り、その商品名を覚えて次回から自動入力します。';
+    res.appendChild(note);
+    lines.forEach(o=>{
+      const row=document.createElement('div'); row.className='price-edit';
+      row.innerHTML=`<span class="nm" style="font-size:12px">${o.text}</span><span class="unit">${yen(o.price)}</span><select style="width:120px">${ingredientSelectHtml()}</select>`;
+      const sel=row.querySelector('select');
+      sel.addEventListener('change',()=>{ const id=sel.value; if(!id) return;
+        const inp=$('#receiptList input[data-id="'+id+'"]'); if(inp) inp.value=o.price;
+        const key=C.learnKeyFromLine(o.text);
+        if(key){ state.aliases=state.aliases||{}; state.aliases[id]=state.aliases[id]||[]; if(!state.aliases[id].includes(key)) state.aliases[id].push(key); persist(); }
+        row.style.opacity=.5; sel.disabled=true; toast((im[id]?im[id].name:id)+'に登録し、商品名を学習しました');
+      });
+      res.appendChild(row);
+    });
+  }
+  $('#ocrStatus').innerHTML = filled? ('自動入力: <b>'+filled+'件</b>。金額を確認し、下の候補も割り当てたら「保存」を押してください。') : '自動一致なし。下の候補から食材を選ぶか、手入力してください。';
+}
+
 /* ---------- データ入出力 ---------- */
 $('#btnExport').addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
@@ -984,8 +1168,8 @@ $('#btnReset').addEventListener('click',()=>{
 });
 
 /* ---------- 初期描画 ---------- */
-function renderAll(){ renderMenu(); renderShop(); fillPriceSelect(); renderReceiptTab(); if($('#tab-price').classList.contains('on')) renderPrice(); }
-renderMenu();
+function renderAll(){ renderMenu(); renderShop(); fillPriceSelect(); renderReceiptTab(); renderHistory(); if($('#tab-price').classList.contains('on')) renderPrice(); }
+renderMenu(); renderHistory();
 window.closeModal=closeModal;
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
