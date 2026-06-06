@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>20分こんだて & 買い物 & 食費グラフ</title>
+<meta name="theme-color" content="#2f9e6e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="20分こんだて">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1f2933; --sub:#67727e;
+    --line:#e6e9ee; --accent:#2f9e6e; --accent2:#2563eb; --warn:#d9772e; --bad:#d64545;
+    --chip:#eef6f1; --shadow:0 1px 3px rgba(20,30,40,.08),0 6px 18px rgba(20,30,40,.05);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    font-size:15px;line-height:1.6;-webkit-text-size-adjust:100%}
+  .wrap{max-width:720px;margin:0 auto;padding:0 14px 96px}
+  header.app{position:sticky;top:0;z-index:20;background:rgba(246,247,249,.92);
+    backdrop-filter:blur(8px);padding:14px 14px 8px;border-bottom:1px solid var(--line)}
+  header.app h1{font-size:18px;margin:0;font-weight:700}
+  header.app .sub{font-size:12px;color:var(--sub);margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:14px;margin:12px 0;box-shadow:var(--shadow)}
+  .row{display:flex;gap:10px;align-items:center}
+  .between{justify-content:space-between}
+  .wrapf{flex-wrap:wrap}
+  button{font-family:inherit;font-size:14px;border:none;border-radius:10px;padding:10px 14px;
+    background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:.15s;min-height:42px}
+  button:active{transform:scale(.97)}
+  button.ghost{background:#eef1f5;color:var(--ink)}
+  button.blue{background:var(--accent2)}
+  button.sm{padding:7px 11px;min-height:36px;font-size:13px;font-weight:600}
+  button.tiny{padding:5px 9px;min-height:30px;font-size:12px;border-radius:8px}
+  .chip{display:inline-flex;align-items:center;gap:4px;background:var(--chip);color:#2c6e50;
+    border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700}
+  .chip.g{background:#eef6f1;color:#2c6e50}
+  .chip.b{background:#eaf1fe;color:#2056c7}
+  .chip.o{background:#fbf0e4;color:#a85c1e}
+  .chip.gray{background:#eef1f5;color:#5a6573}
+  /* tabs */
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;
+    border-top:1px solid var(--line);display:flex;max-width:720px;margin:0 auto}
+  nav.tabs button{flex:1;background:none;color:var(--sub);border-radius:0;padding:8px 2px 10px;
+    font-size:11px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:auto}
+  nav.tabs button .ic{font-size:20px;line-height:1}
+  nav.tabs button.on{color:var(--accent)}
+  .tabpane{display:none}
+  .tabpane.on{display:block}
+  /* meal grid */
+  .day{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0}
+  .day .dhead{background:#f1f4f7;padding:7px 12px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+  .meal{display:flex;gap:10px;padding:10px 12px;border-top:1px solid var(--line);cursor:pointer;align-items:flex-start}
+  .meal:first-child{border-top:none}
+  .meal .ml{font-size:11px;color:var(--sub);width:34px;flex:none;padding-top:2px;font-weight:700}
+  .meal .mm{flex:1}
+  .meal .mn{font-weight:600}
+  .meal .mt{font-size:11px;color:var(--sub);margin-top:2px}
+  .balance{font-size:11px}
+  .b-ok{color:var(--accent);font-weight:700}
+  .b-no{color:var(--warn);font-weight:700}
+  .pricebar{height:10px;border-radius:6px;background:#eef1f5;overflow:hidden;margin-top:6px}
+  .pricebar > div{height:100%;border-radius:6px}
+  .big{font-size:26px;font-weight:800;letter-spacing:-.5px}
+  .muted{color:var(--sub);font-size:12px}
+  table.list{width:100%;border-collapse:collapse}
+  table.list td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+  table.list td.r{text-align:right;white-space:nowrap}
+  .cat{font-size:11px;color:var(--sub);font-weight:700;margin:14px 0 2px;text-transform:uppercase;letter-spacing:.04em}
+  .chk{width:20px;height:20px}
+  label.tg{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:50;background:rgba(20,28,38,.45);display:none;
+    align-items:flex-end;justify-content:center}
+  .modal.on{display:flex}
+  .sheet{background:#fff;width:100%;max-width:720px;max-height:88vh;overflow:auto;
+    border-radius:18px 18px 0 0;padding:18px 16px 28px;animation:up .22s ease}
+  @keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
+  .sheet h3{margin:0 0 4px;font-size:17px}
+  .ing{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}
+  .steps{margin:10px 0 0;padding-left:18px}
+  .steps li{margin:4px 0}
+  input[type=number],input[type=text],select{font-family:inherit;font-size:15px;padding:8px 10px;
+    border:1px solid var(--line);border-radius:9px;width:100%;background:#fff;color:var(--ink)}
+  input[type=number]{text-align:right}
+  .price-edit{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .price-edit .nm{flex:1;font-size:14px}
+  .price-edit .unit{font-size:11px;color:var(--sub);width:54px;text-align:right}
+  .price-edit input{width:88px}
+  .thumb{width:100%;max-height:230px;object-fit:contain;border-radius:10px;background:#f1f4f7;margin:8px 0}
+  .empty{text-align:center;color:var(--sub);padding:30px 10px;font-size:13px}
+  .legend{font-size:11px;color:var(--sub);margin-top:6px}
+  .pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  canvas{max-width:100%}
+  .toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:#1f2933;color:#fff;
+    padding:10px 16px;border-radius:10px;font-size:13px;z-index:60;opacity:0;transition:.25s;pointer-events:none;box-shadow:var(--shadow)}
+  .toast.on{opacity:1}
+  .hint{background:#f1f7f3;border:1px solid #d7ebe0;border-radius:10px;padding:10px 12px;font-size:12.5px;color:#2c6e50;margin:8px 0}
+  .danger{color:var(--bad)}
+  details summary{cursor:pointer;font-size:13px;color:var(--sub);font-weight:600}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:480px){.big{font-size:22px}}
+</style>
+</head>
+<body>
+
+<!-- ============ CORE: data + pure logic (no DOM, testable) ============ -->
+<script id="core">
+/* global module */
+(function(root){
+"use strict";
+
+/* ---- 食材カタログ（2026年6月のおおよその相場で初期化） ----
+   price = 1パックあたりの価格(円)。unit/size はパックの内容量。
+   cat: carb=主食, protein=たんぱく源, veg=野菜, dairy=乳/卵関連, fruit=果物, season=調味料/常備
+   g  = 1単位(unit)あたりのグラム数（栄養計算用の換算）
+   n  = 可食100gあたりの栄養 [kcal, たんぱく質g, 脂質g, 炭水化物g, 食物繊維g, 食塩相当量g]
+        ※出典: 日本食品標準成分表(八訂)の代表値をもとにした概算
+   veg= 「野菜350g/日」目標に数える食材か（いも・果物は数えない） */
+const INGREDIENTS = [
+  // 主食
+  {id:'rice', name:'米', cat:'carb', unit:'g', size:5000, price:4000, g:1, n:[342,6.1,0.9,77.6,0.5,0]},
+  {id:'bread', name:'食パン', cat:'carb', unit:'枚', size:6, price:160, g:60, n:[248,8.9,4.1,46.4,2.3,1.2]},
+  {id:'pasta', name:'パスタ', cat:'carb', unit:'g', size:500, price:250, g:1, n:[347,12.9,1.8,73.1,5.4,0]},
+  {id:'udon', name:'うどん(ゆで)', cat:'carb', unit:'玉', size:3, price:150, g:230, n:[95,2.6,0.4,21.6,1.3,0.3]},
+  {id:'oats', name:'オートミール', cat:'carb', unit:'g', size:500, price:400, g:1, n:[350,13.7,5.7,69.1,9.4,0]},
+  // たんぱく源
+  {id:'egg', name:'卵', cat:'dairy', unit:'個', size:10, price:315, g:55, n:[142,12.2,10.2,0.4,0,0.4]},
+  {id:'chicken_b', name:'鶏むね肉', cat:'protein', unit:'g', size:600, price:850, g:1, n:[105,23.3,1.9,0,0,0.1]},
+  {id:'chicken_t', name:'鶏もも肉', cat:'protein', unit:'g', size:500, price:780, g:1, n:[190,16.6,14.2,0,0,0.2]},
+  {id:'pork_k', name:'豚こま切れ', cat:'protein', unit:'g', size:400, price:600, g:1, n:[230,18,17,0.2,0,0.1]},
+  {id:'pork_b', name:'豚バラ肉', cat:'protein', unit:'g', size:300, price:500, g:1, n:[366,14.4,35.4,0.1,0,0.1]},
+  {id:'mince', name:'合いびき肉', cat:'protein', unit:'g', size:400, price:620, g:1, n:[250,17.5,21,0.3,0,0.1]},
+  {id:'salmon', name:'塩鮭', cat:'protein', unit:'切', size:2, price:400, g:80, n:[183,22.4,8,0.1,0,1.8]},
+  {id:'saba', name:'塩さば', cat:'protein', unit:'切', size:2, price:360, g:90, n:[290,20,22,0.1,0,1.8]},
+  {id:'tuna', name:'ツナ缶', cat:'protein', unit:'缶', size:3, price:330, g:70, n:[267,17.7,21.7,0.1,0,0.9]},
+  {id:'tofu', name:'豆腐', cat:'protein', unit:'丁', size:3, price:120, g:300, n:[73,7,4.9,1.5,1.1,0]},
+  {id:'natto', name:'納豆', cat:'protein', unit:'パック', size:3, price:100, g:45, n:[190,16.5,10,12.1,6.7,0.8]},
+  // 野菜
+  {id:'onion', name:'玉ねぎ', cat:'veg', unit:'個', size:3, price:250, g:200, n:[33,1,0.1,8.4,1.5,0], veg:true},
+  {id:'carrot', name:'にんじん', cat:'veg', unit:'本', size:3, price:200, g:150, n:[30,0.7,0.2,9.1,2.8,0.1], veg:true},
+  {id:'potato', name:'じゃがいも', cat:'veg', unit:'個', size:4, price:300, g:120, n:[76,1.6,0.1,17.6,1.2,0]},
+  {id:'cabbage', name:'キャベツ', cat:'veg', unit:'玉', size:1, price:250, g:1000, n:[23,1.3,0.2,5.2,1.8,0], veg:true},
+  {id:'moyashi', name:'もやし', cat:'veg', unit:'袋', size:1, price:40, g:200, n:[15,1.7,0.1,2.6,1.3,0], veg:true},
+  {id:'spinach', name:'ほうれん草', cat:'veg', unit:'袋', size:1, price:200, g:200, n:[20,2.2,0.4,3.1,2.8,0], veg:true},
+  {id:'komatsu', name:'小松菜', cat:'veg', unit:'袋', size:1, price:150, g:250, n:[13,1.5,0.2,2.4,1.9,0], veg:true},
+  {id:'broccoli', name:'ブロッコリー', cat:'veg', unit:'個', size:1, price:250, g:250, n:[37,5.4,0.6,6.6,5.1,0.1], veg:true},
+  {id:'minitomato', name:'ミニトマト', cat:'veg', unit:'パック', size:1, price:250, g:200, n:[30,1.1,0.1,7.2,1.4,0], veg:true},
+  {id:'piman', name:'ピーマン', cat:'veg', unit:'個', size:4, price:180, g:35, n:[22,0.9,0.2,5.1,2.3,0], veg:true},
+  {id:'negi', name:'長ねぎ', cat:'veg', unit:'本', size:3, price:200, g:100, n:[35,1.4,0.1,8.3,2.5,0], veg:true},
+  {id:'shimeji', name:'しめじ', cat:'veg', unit:'袋', size:1, price:130, g:100, n:[18,2.7,0.5,5,3.7,0], veg:true},
+  {id:'daikon', name:'大根', cat:'veg', unit:'本', size:1, price:200, g:1000, n:[18,0.5,0.1,4.1,1.4,0], veg:true},
+  {id:'mixveg', name:'冷凍ミックスベジ', cat:'veg', unit:'g', size:300, price:200, g:1, n:[70,3,0.5,13,4,0], veg:true},
+  // 乳/果物
+  {id:'milk', name:'牛乳', cat:'dairy', unit:'ml', size:1000, price:230, g:1, n:[61,3.3,3.8,4.8,0,0.1]},
+  {id:'yogurt', name:'ヨーグルト', cat:'dairy', unit:'g', size:400, price:160, g:1, n:[62,3.6,3,4.9,0,0.1]},
+  {id:'cheese', name:'スライスチーズ', cat:'dairy', unit:'枚', size:7, price:250, g:18, n:[313,22.7,26,1.3,0,2.8]},
+  {id:'banana', name:'バナナ', cat:'fruit', unit:'本', size:5, price:200, g:100, n:[86,1.1,0.2,22.5,1.1,0]},
+  // 調味料/常備
+  {id:'miso', name:'味噌', cat:'season', unit:'g', size:750, price:400, g:1, n:[182,11,6,22,4.9,12.4]},
+  {id:'soy', name:'醤油', cat:'season', unit:'ml', size:1000, price:300, g:1, n:[71,7.7,0,10.1,0,14.5]},
+  {id:'oil', name:'サラダ油', cat:'season', unit:'ml', size:900, price:350, g:1, n:[921,0,100,0,0,0]},
+  {id:'sesoil', name:'ごま油', cat:'season', unit:'ml', size:200, price:350, g:1, n:[921,0,100,0,0,0]},
+  {id:'sugar', name:'砂糖', cat:'season', unit:'g', size:1000, price:250, g:1, n:[384,0,0,99,0,0]},
+  {id:'salt', name:'塩', cat:'season', unit:'g', size:1000, price:120, g:1, n:[0,0,0,0,0,99]},
+  {id:'pepper', name:'こしょう', cat:'season', unit:'g', size:30, price:120, g:1, n:[369,11,6,67,0,0]},
+  {id:'dashi', name:'顆粒だし', cat:'season', unit:'g', size:100, price:200, g:1, n:[223,26,0.3,30,0,40]},
+  {id:'mayo', name:'マヨネーズ', cat:'season', unit:'g', size:450, price:300, g:1, n:[700,1.4,75,3,0,1.9]},
+  {id:'ketchup', name:'ケチャップ', cat:'season', unit:'g', size:500, price:250, g:1, n:[104,1.6,0.2,25,1.7,3.3]},
+  {id:'ponzu', name:'ポン酢', cat:'season', unit:'ml', size:500, price:250, g:1, n:[59,3.6,0,9,0,7.8]},
+  {id:'mentsuyu', name:'めんつゆ(ストレート)', cat:'season', unit:'ml', size:500, price:300, g:1, n:[44,2.2,0,8,0,3.3]},
+  {id:'curry', name:'カレールー', cat:'season', unit:'箱', size:1, price:200, g:120, n:[474,6,34,45,3.7,10.7]},
+  {id:'gara', name:'鶏ガラスープの素', cat:'season', unit:'g', size:110, price:250, g:1, n:[210,12,1.5,35,0,40]},
+  {id:'garlic', name:'にんにく', cat:'season', unit:'g', size:100, price:150, g:1, n:[129,6,0.9,27,6.2,0]},
+  {id:'ginger', name:'しょうが', cat:'season', unit:'g', size:100, price:150, g:1, n:[30,0.9,0.3,6.6,2.1,0]},
+  {id:'nori', name:'焼き海苔', cat:'season', unit:'枚', size:8, price:200, g:3, n:[297,41,3.7,44,36,1.3]},
+  {id:'wakame', name:'乾燥わかめ', cat:'season', unit:'g', size:60, price:200, g:1, n:[117,18,4,42,32,23]}
+];
+
+/* 朝+夜の2食ぶんの栄養目標（昼は別に食べる前提で1日目安の約2/3）
+   方針: カロリー控えめ / 生活習慣病対策として 塩分↓・食物繊維↑・野菜↑ */
+const TARGET = {
+  kcal:{min:850, max:1350, label:'エネルギー', unit:'kcal'},   // 太らないよう上限重視
+  protein:{min:40, label:'たんぱく質', unit:'g'},
+  fat:{max:48, label:'脂質', unit:'g'},
+  fiber:{min:11, label:'食物繊維', unit:'g'},                   // 1日18〜20g目安。残りは昼で補う
+  salt:{max:5.0, label:'塩分', unit:'g'},                       // 1日7.5g未満を意識
+  veg:{min:220, label:'野菜', unit:'g'}                         // 1日350gの目安。残りは昼で補う
+};
+
+/* ---- レシピ（1人前・調理20分以内） ----
+   type: breakfast / dinner
+   comp: 栄養の構成要素 P=たんぱく V=野菜 C=主食 D=乳/卵 F=果物
+   main: 主役の食材ラベル（連続回避用）  cuisine: 和/洋/中
+   use: {id:数量(unit基準)} */
+const RECIPES = [
+  // ---- 朝（12種）----
+  {id:'B1', type:'breakfast', name:'卵かけご飯とほうれん草の味噌汁', time:9, cuisine:'和', main:'卵', comp:['P','C','V'],
+   use:{rice:65,egg:1,miso:16,wakame:1,dashi:1,soy:3,spinach:0.2},
+   steps:['ご飯を温める','卵を割り入れ醤油をかける','だし・味噌・わかめ・ほうれん草で味噌汁']},
+  {id:'B2', type:'breakfast', name:'納豆ご飯とわかめ味噌汁', time:8, cuisine:'和', main:'納豆', comp:['P','C','V'],
+   use:{rice:65,natto:1,miso:16,dashi:1,negi:0.2,wakame:1},
+   steps:['ご飯を温める','納豆を混ぜてのせ、ねぎを散らす','わかめの味噌汁を作る']},
+  {id:'B3', type:'breakfast', name:'目玉焼きトーストとヨーグルト', time:10, cuisine:'洋', main:'卵', comp:['P','C','D','V'],
+   use:{bread:1,egg:1,oil:3,yogurt:100,cheese:1,minitomato:0.25},
+   steps:['パンを焼きチーズをのせる','目玉焼きを焼いて添える','ヨーグルトとミニトマトを添える']},
+  {id:'B4', type:'breakfast', name:'オートミール・バナナ・牛乳', time:5, cuisine:'洋', main:'オートミール', comp:['C','D','F'],
+   use:{oats:40,banana:1,milk:150},
+   steps:['オートミールに牛乳を注ぐ','レンジで1分半','バナナをのせる']},
+  {id:'B5', type:'breakfast', name:'ツナマヨトーストとミニトマト', time:8, cuisine:'洋', main:'ツナ', comp:['P','C','D','V'],
+   use:{bread:1,tuna:0.34,mayo:12,cheese:1,milk:150,minitomato:0.25},
+   steps:['ツナとマヨを混ぜパンにのせチーズで焼く','ミニトマトを添える','牛乳を添える']},
+  {id:'B6', type:'breakfast', name:'鮭おにぎりと小松菜の味噌汁', time:11, cuisine:'和', main:'鮭', comp:['P','C','V'],
+   use:{rice:100,salmon:0.5,nori:1,miso:16,wakame:1,dashi:1,komatsu:0.2},
+   steps:['鮭を焼いてほぐしご飯に混ぜ握る','海苔を巻く','小松菜とわかめの味噌汁']},
+  {id:'B7', type:'breakfast', name:'チーズトーストとトマトサラダ', time:8, cuisine:'洋', main:'チーズ', comp:['C','D','V'],
+   use:{bread:1,cheese:2,minitomato:0.4,milk:150},
+   steps:['パンにチーズをのせて焼く','ミニトマトでサラダ','牛乳を添える']},
+  {id:'B8', type:'breakfast', name:'小松菜と卵の炒めご飯', time:12, cuisine:'和', main:'卵', comp:['P','V','C'],
+   use:{rice:90,egg:1,komatsu:0.5,oil:3,soy:5},
+   steps:['小松菜を炒める','卵を加えて炒め醤油で味付け','ご飯にのせる']},
+  {id:'B9', type:'breakfast', name:'きのこ味噌汁と納豆ご飯', time:10, cuisine:'和', main:'きのこ', comp:['P','V','C'],
+   use:{rice:90,natto:1,shimeji:0.4,miso:16,dashi:1,wakame:1,negi:0.2},
+   steps:['しめじとわかめを煮て味噌汁にする','ご飯に納豆をのせる']},
+  {id:'B10', type:'breakfast', name:'フレンチトーストとフルーツ・トマト', time:12, cuisine:'洋', main:'卵', comp:['C','D','F','V'],
+   use:{bread:2,egg:1,milk:80,sugar:8,banana:1,minitomato:0.25},
+   steps:['卵・牛乳・砂糖を混ぜパンを浸す','両面を焼く','バナナとミニトマトを添える']},
+  {id:'B11', type:'breakfast', name:'野菜入り卵雑炊', time:12, cuisine:'和', main:'卵', comp:['P','C','V'],
+   use:{rice:80,egg:1,negi:0.3,dashi:2,soy:5,komatsu:0.2,carrot:0.1},
+   steps:['だし汁でご飯・にんじん・小松菜を煮る','溶き卵を回し入れる','ねぎを散らす']},
+  {id:'B12', type:'breakfast', name:'ヨーグルト・ゆで卵・トースト', time:10, cuisine:'洋', main:'卵', comp:['P','C','D','V'],
+   use:{bread:1,egg:1,yogurt:100,banana:1,minitomato:0.25},
+   steps:['卵をゆでる','パンを焼く','ヨーグルト・バナナ・ミニトマトを添える']},
+
+  // ---- 夜（16種）----
+  {id:'D1', type:'dinner', name:'鶏むね照り焼きと温野菜', time:18, cuisine:'和', main:'鶏', comp:['P','C','V'],
+   use:{chicken_b:150,soy:13,sugar:7,oil:4,rice:100,cabbage:0.12,broccoli:0.25},
+   steps:['鶏むねを削ぎ切りに','焼いて醤油・砂糖で照り焼き','キャベツとブロッコリーを温野菜にしてご飯に']},
+  {id:'D2', type:'dinner', name:'豚こま生姜焼き', time:15, cuisine:'和', main:'豚', comp:['P','V','C'],
+   use:{pork_k:100,onion:0.5,ginger:5,soy:13,sugar:5,cabbage:0.15,rice:100,oil:4},
+   steps:['玉ねぎと豚を炒める','生姜・醤油・砂糖で味付け','千切りキャベツとご飯を添える']},
+  {id:'D3', type:'dinner', name:'鮭の塩焼きとほうれん草', time:18, cuisine:'和', main:'鮭', comp:['P','V','C'],
+   use:{salmon:1,spinach:0.5,soy:4,miso:16,dashi:1,rice:100,daikon:0.1},
+   steps:['鮭を焼く','ほうれん草のおひたし・大根おろし','味噌汁とご飯を添える']},
+  {id:'D4', type:'dinner', name:'麻婆豆腐（もやし入り）', time:16, cuisine:'中', main:'豆腐', comp:['P','C','V'],
+   use:{tofu:1,mince:70,negi:0.4,gara:3,soy:8,sesoil:4,rice:100,moyashi:0.5,shimeji:0.3},
+   steps:['ひき肉ともやし・しめじを炒める','水・鶏ガラ・醤油と豆腐を煮る','ねぎとごま油で仕上げご飯に']},
+  {id:'D5', type:'dinner', name:'親子丼ときのこ・青菜', time:16, cuisine:'和', main:'鶏', comp:['P','C','V'],
+   use:{chicken_t:100,egg:2,onion:0.5,mentsuyu:32,rice:110,shimeji:0.4,spinach:0.3},
+   steps:['玉ねぎ・鶏・しめじをめんつゆで煮る','溶き卵を回し入れご飯に','ほうれん草のおひたしを添える']},
+  {id:'D6', type:'dinner', name:'ツナナポリタン', time:15, cuisine:'洋', main:'ツナ', comp:['C','V','P'],
+   use:{pasta:90,tuna:0.34,piman:1,onion:0.5,ketchup:35,oil:4,minitomato:0.2},
+   steps:['パスタをゆでる','具を炒めケチャップで味付け','パスタを和えミニトマトを添える']},
+  {id:'D7', type:'dinner', name:'野菜カレーライス', time:20, cuisine:'洋', main:'豚', comp:['P','V','C'],
+   use:{pork_k:90,onion:0.8,carrot:0.5,potato:1,curry:0.35,rice:100},
+   steps:['野菜と豚を炒める','水を加えて煮る','ルーを溶かしご飯に']},
+  {id:'D8', type:'dinner', name:'塩さば焼きと大根おろし', time:15, cuisine:'和', main:'さば', comp:['P','V','C'],
+   use:{saba:1,daikon:0.25,soy:4,miso:16,dashi:1,rice:100},
+   steps:['さばを焼く','大根をたっぷりおろす','味噌汁とご飯を添える']},
+  {id:'D9', type:'dinner', name:'豚バラもやし炒め', time:12, cuisine:'中', main:'豚', comp:['P','V','C'],
+   use:{pork_b:80,moyashi:1,ponzu:18,sesoil:4,rice:100,carrot:0.2},
+   steps:['豚バラを炒める','もやし・にんじんを加えて炒める','ポン酢で味付けご飯に']},
+  {id:'D10', type:'dinner', name:'オムライス（野菜入り）', time:18, cuisine:'洋', main:'卵', comp:['P','C','V'],
+   use:{rice:110,egg:2,tuna:0.34,onion:0.5,ketchup:32,oil:4,mixveg:60,piman:1},
+   steps:['玉ねぎ・ピーマン・ミックスベジ・ツナとご飯を炒めケチャップ','薄焼き卵を作る','ご飯を包む']},
+  {id:'D11', type:'dinner', name:'鶏むねとブロッコリー炒め', time:15, cuisine:'中', main:'鶏', comp:['P','V','C'],
+   use:{chicken_b:150,broccoli:0.5,garlic:4,soy:9,oil:4,rice:100,carrot:0.2},
+   steps:['ブロッコリーを下ゆで','鶏・にんじん・にんにくを炒める','醤油で味付けご飯に']},
+  {id:'D12', type:'dinner', name:'たっぷり野菜の焼きうどん', time:14, cuisine:'和', main:'豚', comp:['C','P','V'],
+   use:{udon:1,pork_k:70,cabbage:0.12,carrot:0.3,mentsuyu:25,oil:4,moyashi:0.5},
+   steps:['豚と野菜・もやしを炒める','うどんを加える','めんつゆで味付け']},
+  {id:'D13', type:'dinner', name:'ツナと卵の野菜チャーハン', time:13, cuisine:'中', main:'卵', comp:['P','C','V'],
+   use:{rice:130,egg:1,tuna:0.5,negi:0.3,gara:3,sesoil:4,mixveg:60,carrot:0.2},
+   steps:['卵とご飯を炒める','ツナ・ねぎ・ミックスベジ・にんじんを加える','鶏ガラで味付け']},
+  {id:'D14', type:'dinner', name:'ハンバーグと温野菜', time:20, cuisine:'洋', main:'ひき肉', comp:['P','V','C'],
+   use:{mince:140,onion:0.5,egg:0.5,ketchup:20,mixveg:50,rice:90,oil:4,broccoli:0.2},
+   steps:['ひき肉と玉ねぎ・卵を混ぜ成形','焼く','ブロッコリーと付け合わせ・ご飯を添える']},
+  {id:'D15', type:'dinner', name:'肉豆腐ときのこ・青菜', time:16, cuisine:'和', main:'豚', comp:['P','C','V'],
+   use:{tofu:1,pork_k:90,negi:0.4,mentsuyu:32,sugar:4,rice:100,komatsu:0.3,shimeji:0.3,carrot:0.15},
+   steps:['豚を炒める','豆腐・小松菜・しめじ・にんじんをめんつゆで煮る','ご飯を添える']},
+  {id:'D16', type:'dinner', name:'鶏もも唐揚げ風とキャベツ', time:20, cuisine:'和', main:'鶏', comp:['P','V','C'],
+   use:{chicken_t:170,garlic:4,ginger:4,soy:12,oil:10,cabbage:0.15,rice:100,minitomato:0.25},
+   steps:['鶏に下味をつけ片栗(代用)で揚げ焼き','キャベツを千切りにしトマトを添える','ご飯を添える']}
+];
+
+const byId = arr => arr.reduce((m,x)=>(m[x.id]=x,m),{});
+const ING = byId(INGREDIENTS);
+const REC = byId(RECIPES);
+const BREAKFASTS = RECIPES.filter(r=>r.type==='breakfast').map(r=>r.id);
+const DINNERS    = RECIPES.filter(r=>r.type==='dinner').map(r=>r.id);
+
+/* 1食を作るのに実際に消費する食材の価値(円)。在庫から少しずつ使う前提。 */
+function consumedCost(recipeId, ingMap){
+  ingMap = ingMap || ING;
+  const r = REC[recipeId]; let sum=0;
+  for(const id in r.use){
+    const ing = ingMap[id]; if(!ing) throw new Error('未知の食材: '+id);
+    sum += (r.use[id]/ing.size)*ing.price;
+  }
+  return sum;
+}
+
+/* 1食の栄養量を、使用食材のグラム換算から計算
+   返り値 {kcal,protein,fat,carb,fiber,salt,veg} */
+function recipeNutrition(recipeId, ingMap){
+  ingMap = ingMap || ING;
+  const r = REC[recipeId];
+  const o = {kcal:0,protein:0,fat:0,carb:0,fiber:0,salt:0,veg:0};
+  for(const id in r.use){
+    const ing = ingMap[id]; if(!ing||!ing.n) continue;
+    const grams = r.use[id]*(ing.g||1);
+    const f = grams/100;
+    o.kcal+=ing.n[0]*f; o.protein+=ing.n[1]*f; o.fat+=ing.n[2]*f;
+    o.carb+=ing.n[3]*f; o.fiber+=ing.n[4]*f; o.salt+=ing.n[5]*f;
+    if(ing.veg) o.veg+=grams;
+  }
+  return o;
+}
+/* 1日(朝+夜)の合計栄養 */
+function dayNutrition(bId,dId,ingMap){
+  const a=recipeNutrition(bId,ingMap), b=recipeNutrition(dId,ingMap);
+  const o={}; for(const k in a) o[k]=a[k]+b[k]; return o;
+}
+/* 各栄養素を目標と比べて状態を返す: 'low'(不足)/'ok'(適正)/'high'(過剰) */
+function evalNutrient(key, val){
+  const t=TARGET[key]; if(!t) return 'ok';
+  if(t.min!=null && val < t.min) return 'low';
+  if(t.max!=null && val > t.max) return 'high';
+  return 'ok';
+}
+function dayStatus(bId,dId,ingMap){
+  const n=dayNutrition(bId,dId,ingMap); const st={};
+  for(const k in TARGET) st[k]=evalNutrient(k,n[k]);
+  return {nutri:n, status:st};
+}
+/* 不足・過剰の重大度を数値化（最適化の目的関数）。0に近いほど良い。
+   生活習慣病対策として 塩分過剰・野菜不足・食物繊維不足・カロリー過剰を重く罰する。 */
+function dayPenalty(bId,dId,ingMap){
+  const n=dayNutrition(bId,dId,ingMap); let p=0;
+  const over=(v,max,w)=> v>max ? ((v-max)/max)*w : 0;
+  const under=(v,min,w)=> v<min ? ((min-v)/min)*w : 0;
+  p += over(n.salt, TARGET.salt.max, 60);      // 塩分過剰: 最重視
+  p += under(n.veg, TARGET.veg.min, 45);       // 野菜不足: 重視
+  p += under(n.fiber, TARGET.fiber.min, 35);   // 食物繊維不足
+  p += over(n.kcal, TARGET.kcal.max, 30);      // カロリー過剰（太りたくない）
+  p += under(n.kcal, TARGET.kcal.min, 12);     // 少なすぎも軽く減点
+  p += under(n.protein, TARGET.protein.min, 25);
+  p += over(n.fat, TARGET.fat.max, 18);
+  return p;
+}
+/* 「バランスOK」の判定: 重大な不足・過剰がない(塩分/野菜/食物繊維/カロリー上限を満たす) */
+function dayBalanced(bId,dId,ingMap){
+  const n=dayNutrition(bId,dId,ingMap);
+  return n.salt<=TARGET.salt.max && n.veg>=TARGET.veg.min &&
+         n.fiber>=TARGET.fiber.min && n.kcal<=TARGET.kcal.max && n.protein>=TARGET.protein.min;
+}
+/* 後方互換: 構成タグ（モーダルのラベル表示用） */
+function dayComponents(bId,dId){
+  const set = new Set([...(REC[bId].comp||[]), ...(REC[dId].comp||[])]);
+  return {P:set.has('P'), V:set.has('V'), C:set.has('C'), D:set.has('D'), F:set.has('F')};
+}
+
+/* 決定論的乱数 */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){
+  const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* 1週間の献立を生成（seedで決定論的）
+   ・朝7食/夜7食 重複なし
+   ・夜は同じ主役を2日連続にしない（できる範囲で）
+   ・各日が栄養バランスを満たすよう調整 */
+function generatePlan(seed){
+  const rng = mulberry32(seed>>>0);
+  const breakfast = shuffle(BREAKFASTS,rng).slice(0,7);
+  // 夜: 主役が連続しないように貪欲に7つ選ぶ
+  let pool = shuffle(DINNERS,rng);
+  const dinner=[]; let lastMain=null;
+  const tryFill=(allowSameMain)=>{
+    for(const id of pool){
+      if(dinner.includes(id)) continue;
+      if(!allowSameMain && REC[id].main===lastMain) continue;
+      dinner.push(id); lastMain=REC[id].main;
+      if(dinner.length===7) return true;
+    }
+    return false;
+  };
+  tryFill(false);
+  if(dinner.length<7){ tryFill(true); } // 足りなければ連続許可で補完
+  // 栄養バランスの局所改善: 各日の夜を未使用レシピと入れ替えて1日のペナルティを下げる
+  improveDinners(breakfast, dinner);
+  return {breakfast, dinner, seed:seed>>>0};
+}
+/* 夜献立を入れ替えて栄養ペナルティを下げる（重複を保ったまま） */
+function improveDinners(breakfast, dinner){
+  let improved=true, guard=0;
+  while(improved && guard++<40){
+    improved=false;
+    for(let d=0; d<7; d++){
+      const cur=dayPenalty(breakfast[d],dinner[d]);
+      if(cur<=0) continue;
+      const used=new Set(dinner);
+      let bestId=null, bestPen=cur;
+      for(const cand of DINNERS){
+        if(used.has(cand)) continue;
+        const pen=dayPenalty(breakfast[d],cand);
+        // 主役の連続も避ける（できる範囲で）
+        const prevMain=d>0?REC[dinner[d-1]].main:null, nextMain=d<6?REC[dinner[d+1]].main:null;
+        const consec=(REC[cand].main===prevMain||REC[cand].main===nextMain)?0.001:0;
+        if(pen+consec<bestPen-1e-9){ bestPen=pen+consec; bestId=cand; }
+      }
+      if(bestId){ dinner[d]=bestId; improved=true; }
+    }
+  }
+}
+
+/* 週の消費コスト合計(円) */
+function weeklyConsumedCost(plan, ingMap){
+  let sum=0;
+  for(let d=0; d<7; d++){ sum += consumedCost(plan.breakfast[d],ingMap); sum += consumedCost(plan.dinner[d],ingMap); }
+  return sum;
+}
+function monthlyProjection(weekly){ return weekly*365/12/7; } // ≒ 週×4.345
+
+/* 週の栄養ペナルティ合計（小さいほど栄養良好） */
+function weeklyPenalty(plan, ingMap){
+  let p=0; for(let d=0; d<7; d++) p+=dayPenalty(plan.breakfast[d],plan.dinner[d],ingMap); return p;
+}
+/* 週の平均栄養（1日あたり, 朝夜2食ぶん） */
+function weeklyNutrition(plan, ingMap){
+  const sum={kcal:0,protein:0,fat:0,carb:0,fiber:0,salt:0,veg:0};
+  for(let d=0; d<7; d++){ const n=dayNutrition(plan.breakfast[d],plan.dinner[d],ingMap);
+    for(const k in sum) sum[k]+=n[k]; }
+  const avg={}; for(const k in sum) avg[k]=sum[k]/7; return avg;
+}
+
+/* 多数のseedを試し、栄養を最優先・次に予算で最良案を返す
+   目的関数 = 栄養ペナルティ×1000 + 予算超過(月額)×0.5 */
+function chooseBestPlan(opts){
+  opts = opts||{}; const tries = opts.tries||80; const budget = opts.budget||15000;
+  const ingMap = opts.ingMap||ING; const startSeed = opts.startSeed || 1;
+  let best=null;
+  for(let i=0;i<tries;i++){
+    const seed = startSeed + i*2654435761 >>> 0;
+    const plan = generatePlan(seed);
+    const pen = weeklyPenalty(plan, ingMap);
+    const weekly = weeklyConsumedCost(plan, ingMap);
+    const monthly = monthlyProjection(weekly);
+    const over = Math.max(0, monthly-budget);
+    const objective = pen*1000 + over*8;
+    if(!best || objective<best.objective){ best={plan,pen,weekly,monthly,objective}; }
+  }
+  return best ? best.plan : generatePlan(startSeed);
+}
+
+/* 買い物リスト生成: 週の必要量を集計→パック単位に切上げ
+   includeSeason=false で調味料/常備を除外 */
+function buildShoppingList(plan, opts){
+  opts = opts||{}; const includeSeason = opts.includeSeason!==false;
+  const ingMap = opts.ingMap||ING;
+  const need={}; // id -> 必要量(unit)
+  const add=(recipeId)=>{ const r=REC[recipeId];
+    for(const id in r.use){ need[id]=(need[id]||0)+r.use[id]; } };
+  for(let d=0; d<7; d++){ add(plan.breakfast[d]); add(plan.dinner[d]); }
+  const items=[];
+  for(const id in need){
+    const ing=ingMap[id];
+    if(!includeSeason && ing.cat==='season') continue;
+    const qty=need[id];
+    const packs=Math.max(1,Math.ceil(qty/ing.size - 1e-9));
+    items.push({id, name:ing.name, cat:ing.cat, unit:ing.unit, size:ing.size,
+      need:qty, packs, price:ing.price, cost:packs*ing.price});
+  }
+  // カテゴリ→名前で安定ソート
+  const order={carb:0,protein:1,veg:2,dairy:3,fruit:4,season:5,other:6};
+  items.sort((a,b)=> (order[a.cat]-order[b.cat]) || a.name.localeCompare(b.name,'ja'));
+  const total=items.reduce((s,x)=>s+x.cost,0);
+  return {items, total};
+}
+
+/* 価格更新: 最新値を currentPrice として履歴に追加（同日なら上書き） */
+function applyPriceUpdate(ing, newPrice, dateStr, source){
+  if(!ing.history) ing.history=[];
+  newPrice = Math.round(Number(newPrice));
+  if(!(newPrice>0)) return false;
+  const existing = ing.history.find(h=>h.date===dateStr);
+  if(existing){ existing.price=newPrice; existing.source=source; }
+  else { ing.history.push({date:dateStr, price:newPrice, source:source}); }
+  ing.history.sort((a,b)=> a.date<b.date?-1:a.date>b.date?1:0);
+  ing.price = ing.history[ing.history.length-1].price; // 最新を現在価格に
+  return true;
+}
+
+const api = {INGREDIENTS,RECIPES,ING,REC,BREAKFASTS,DINNERS,TARGET,
+  consumedCost,recipeNutrition,dayNutrition,evalNutrient,dayStatus,dayPenalty,
+  dayComponents,dayBalanced,generatePlan,weeklyConsumedCost,weeklyPenalty,weeklyNutrition,
+  monthlyProjection,chooseBestPlan,buildShoppingList,applyPriceUpdate,mulberry32};
+if(typeof module!=='undefined' && module.exports){ module.exports=api; }
+root.Core = api;
+})(typeof window!=='undefined'?window:globalThis);
+</script>
+
+<!-- ============ APP UI ============ -->
+<header class="app">
+  <h1>20分こんだて</h1>
+  <div class="sub">1人分・朝夜 / 20分で作れる / 食費を記録してグラフに</div>
+</header>
+
+<div class="wrap">
+  <!-- 献立タブ -->
+  <section id="tab-menu" class="tabpane on">
+    <div class="card">
+      <div class="row between wrapf">
+        <div>
+          <div class="muted">今週の予想食費（実際に食べる分の食材価値）</div>
+          <div class="big" id="weeklyCost">¥0 <span style="font-size:13px;color:var(--sub);font-weight:600">/週</span></div>
+          <div class="muted" id="monthlyCost"></div>
+        </div>
+        <div style="text-align:right">
+          <button id="btnRegen">献立を作り直す</button>
+          <div class="muted" style="margin-top:6px">予算 <span id="budgetLabel">¥15,000</span>/月</div>
+        </div>
+      </div>
+      <div class="pricebar"><div id="budgetFill"></div></div>
+      <div class="legend" id="budgetMsg"></div>
+    </div>
+
+    <div class="card">
+      <div class="row between"><div class="muted" style="font-weight:700;color:var(--ink)">週の栄養バランス（朝夜2食/日の平均）</div></div>
+      <div id="nutriSummary"></div>
+      <div class="legend">目標は「朝夜2食ぶん」の目安です（昼食で残りを補う前提）。塩分・野菜・食物繊維は生活習慣病対策の要、エネルギーは太りすぎ防止に上限を設けています。</div>
+    </div>
+
+    <div id="planArea"></div>
+    <div class="hint">各日に栄養量と過不足を表示しています。献立カードをタップすると材料・作り方・栄養が見られます。「作り直す」で栄養と予算の両面から別の最適案を探します。</div>
+  </section>
+
+  <!-- 買い物リストタブ -->
+  <section id="tab-shop" class="tabpane">
+    <div class="card">
+      <div class="row between">
+        <div>
+          <div class="muted">週1回の買い物 合計</div>
+          <div class="big" id="shopTotal">¥0</div>
+        </div>
+        <div style="text-align:right">
+          <button class="ghost sm" id="btnCopy">コピー</button>
+        </div>
+      </div>
+      <label class="tg" style="margin-top:8px"><input type="checkbox" id="incSeason" class="chk" checked> 調味料・常備品も含める</label>
+      <div class="legend">チェックを外すと、家にある調味料を除いた“今週ならではの買い物”だけになります。</div>
+    </div>
+    <div id="shopArea"></div>
+  </section>
+
+  <!-- 価格・グラフタブ -->
+  <section id="tab-price" class="tabpane">
+    <div class="card">
+      <div class="muted">食材の価格推移</div>
+      <select id="priceSelect" style="margin:8px 0"></select>
+      <canvas id="priceChart" height="200"></canvas>
+      <div class="legend" id="priceMeta"></div>
+    </div>
+    <div class="card">
+      <div class="muted">週の買い物総額の推移（レシート登録ごとに記録）</div>
+      <canvas id="totalChart" height="180"></canvas>
+      <div class="legend" id="totalMeta">レシートを登録すると、その時点の総額が記録されていきます。</div>
+    </div>
+    <div class="card">
+      <details>
+        <summary>すべての食材の現在価格を見る／手で直す</summary>
+        <div id="priceTable" style="margin-top:8px"></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- レシート登録タブ -->
+  <section id="tab-receipt" class="tabpane">
+    <div class="card">
+      <div class="muted" style="font-weight:700;color:var(--ink)">レシートを登録して価格を最新化</div>
+      <div class="legend">買い物のレシートを撮影し、買った品の金額を入れて保存。次回からその価格が使われ、グラフにも反映されます。</div>
+      <input type="file" id="receiptFile" accept="image/*" capture="environment" style="margin:10px 0">
+      <img id="receiptPreview" class="thumb" style="display:none" alt="レシート">
+      <input type="text" id="ingSearch" placeholder="食材名で絞り込み（例: 卵）" style="margin:8px 0">
+      <div id="receiptList" style="max-height:46vh;overflow:auto"></div>
+      <div class="row" style="margin-top:12px">
+        <button id="btnSaveReceipt" style="flex:1">この内容で保存</button>
+      </div>
+    </div>
+    <div class="card">
+      <details>
+        <summary>登録したレシートの履歴</summary>
+        <div id="receiptHistory" style="margin-top:8px"></div>
+      </details>
+      <details style="margin-top:10px">
+        <summary>データの書き出し・読み込み・初期化</summary>
+        <div class="row wrapf" style="margin-top:8px">
+          <button class="ghost sm" id="btnExport">書き出し(JSON)</button>
+          <button class="ghost sm" id="btnImport">読み込み</button>
+          <button class="ghost sm danger" id="btnReset">初期化</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none">
+        </div>
+      </details>
+    </div>
+  </section>
+</div>
+
+<!-- 下部タブ -->
+<nav class="tabs">
+  <button data-tab="tab-menu" class="on"><span class="ic">🍱</span>献立</button>
+  <button data-tab="tab-shop"><span class="ic">🛒</span>買い物</button>
+  <button data-tab="tab-price"><span class="ic">📈</span>価格</button>
+  <button data-tab="tab-receipt"><span class="ic">🧾</span>レシート</button>
+</nav>
+
+<!-- レシピ詳細モーダル -->
+<div class="modal" id="recipeModal"><div class="sheet" id="recipeSheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const C = window.Core;
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+const yen = n=>'¥'+Math.round(n).toLocaleString('ja-JP');
+const DAYS = ['月','火','水','木','金','土','日'];
+const KEY = 'kondate_v1';
+
+/* ---------- 状態の保存/読込 ---------- */
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+let state = load();
+
+function freshState(){
+  const today = todayStr();
+  const ingredients = C.INGREDIENTS.map(x=>({
+    ...x, history:[{date:today,price:x.price,source:'初期推定'}]
+  }));
+  const plan = C.chooseBestPlan({budget:15000, ingMap:byIdLocal(ingredients), startSeed: (Date.now()>>>0)||1});
+  return {version:1, settings:{people:1,budget:15000}, ingredients, plan, receipts:[], costLog:[]};
+}
+function byIdLocal(arr){return arr.reduce((m,x)=>(m[x.id]=x,m),{});}
+function ingMap(){return byIdLocal(state.ingredients);}
+function load(){
+  try{ const raw=localStorage.getItem(KEY); if(raw){ const s=JSON.parse(raw);
+    if(s&&s.ingredients&&s.plan) return migrate(s); } }catch(e){}
+  const s=freshState(); persist(s); return s;
+}
+function migrate(s){
+  const have=new Set(s.ingredients.map(i=>i.id));
+  // 既存食材にも栄養データ(g/n/veg等)を最新カタログから補完。価格と履歴はユーザー値を維持。
+  s.ingredients.forEach(i=>{ const cat=C.ING[i.id];
+    if(cat){ i.g=cat.g; i.n=cat.n; i.veg=cat.veg; i.cat=cat.cat; i.unit=cat.unit; i.size=cat.size; i.name=cat.name;
+      if(i.price==null) i.price=cat.price;
+      if(!i.history||!i.history.length) i.history=[{date:todayStr(),price:i.price,source:'初期推定'}]; } });
+  // 新規食材を追加
+  C.INGREDIENTS.forEach(x=>{ if(!have.has(x.id)){
+    s.ingredients.push({...x, history:[{date:todayStr(),price:x.price,source:'初期推定'}]}); }});
+  if(!s.costLog) s.costLog=[];
+  if(!s.receipts) s.receipts=[];
+  return s;
+}
+function persist(s){ try{ localStorage.setItem(KEY, JSON.stringify(s||state)); }catch(e){ toast('保存容量が一杯です'); } }
+
+/* ---------- トースト ---------- */
+let toastT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1800); }
+
+/* ---------- タブ切替 ---------- */
+$$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  $$('nav.tabs button').forEach(x=>x.classList.remove('on'));
+  $$('.tabpane').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); $('#'+b.dataset.tab).classList.add('on');
+  if(b.dataset.tab==='tab-price') renderPrice();
+  if(b.dataset.tab==='tab-shop') renderShop();
+  if(b.dataset.tab==='tab-receipt') renderReceiptTab();
+}));
+
+/* ---------- 献立描画 ---------- */
+function renderMenu(){
+  const im=ingMap();
+  const weekly=C.weeklyConsumedCost(state.plan, im);
+  const monthly=C.monthlyProjection(weekly);
+  const budget=state.settings.budget;
+  $('#weeklyCost').innerHTML = yen(weekly)+' <span style="font-size:13px;color:var(--sub);font-weight:600">/週</span>';
+  $('#monthlyCost').textContent = 'ひと月およそ '+yen(monthly);
+  $('#budgetLabel').textContent = yen(budget);
+  const pct=Math.min(100, monthly/budget*100);
+  const fill=$('#budgetFill');
+  fill.style.width=pct+'%';
+  fill.style.background = monthly<=budget? 'var(--accent)' : (monthly<=budget*1.1?'var(--warn)':'var(--bad)');
+  $('#budgetMsg').textContent = monthly<=budget
+    ? '予算内です（残り '+yen(budget-monthly)+'/月の余裕）'
+    : '予算より '+yen(monthly-budget)+'/月ほど高めです。野菜を増やすと栄養は上がり費用も上がる関係です。「作り直す」で別の最適案を探せます。';
+
+  renderNutriSummary(im);
+
+  const area=$('#planArea'); area.innerHTML='';
+  for(let d=0; d<7; d++){
+    const b=C.REC[state.plan.breakfast[d]], dn=C.REC[state.plan.dinner[d]];
+    const ds=C.dayStatus(b.id,dn.id,im); const n=ds.nutri, st=ds.status;
+    const okCount=Object.values(st).filter(v=>v==='ok').length;
+    const grade = okCount>=6?'◎':okCount>=5?'○':'△';
+    const gradeCls = okCount>=6?'b-ok':okCount>=5?'b-ok':'b-no';
+    const dayDiv=document.createElement('div'); dayDiv.className='day';
+    dayDiv.innerHTML=`
+      <div class="dhead"><span>${DAYS[d]}曜日</span>
+        <span class="balance ${gradeCls}">バランス${grade} <span class="muted" style="font-weight:600">${okCount}/6項目 適正</span></span>
+      </div>
+      <div class="meal" data-r="${b.id}">
+        <div class="ml">朝</div><div class="mm"><div class="mn">${b.name}</div>
+          <div class="mt">${b.time}分・${b.cuisine}・約${yen(C.consumedCost(b.id,im))}</div></div>
+      </div>
+      <div class="meal" data-r="${dn.id}">
+        <div class="ml">夜</div><div class="mm"><div class="mn">${dn.name}</div>
+          <div class="mt">${dn.time}分・${dn.cuisine}・約${yen(C.consumedCost(dn.id,im))}</div></div>
+      </div>
+      <div style="padding:8px 12px;border-top:1px solid var(--line)">${nutriChips(n,st)}</div>`;
+    area.appendChild(dayDiv);
+  }
+  area.querySelectorAll('.meal').forEach(m=>m.addEventListener('click',()=>openRecipe(m.dataset.r)));
+}
+
+/* 栄養チップ（不足=橙, 過剰=赤, 適正=緑）。値と目標を併記。 */
+const NLABEL={kcal:'エネ',protein:'たんぱく',fat:'脂質',fiber:'繊維',salt:'塩分',veg:'野菜'};
+function fmtVal(k,v){ return k==='kcal'?Math.round(v):(k==='salt'?v.toFixed(1):Math.round(v)); }
+function targetText(k){ const t=C.TARGET[k];
+  if(t.min!=null&&t.max!=null) return t.min+'〜'+t.max; if(t.min!=null) return '≥'+t.min; return '≤'+t.max; }
+function nutriChips(n, st){
+  return ['kcal','protein','fat','fiber','salt','veg'].map(k=>{
+    const s=st[k]; const cls=s==='ok'?'g':(s==='low'?'o':'gray');
+    const clsFinal=s==='high'?'o':cls; // 過剰も橙系
+    const mark=s==='ok'?'✓':(s==='low'?'↓':'↑');
+    return `<span class="chip ${s==='ok'?'g':'o'}" style="margin:2px 4px 2px 0">${NLABEL[k]} ${fmtVal(k,n[k])}${C.TARGET[k].unit==='kcal'?'':C.TARGET[k].unit} ${mark}</span>`;
+  }).join('');
+}
+function renderNutriSummary(im){
+  const avg=C.weeklyNutrition(state.plan, im);
+  const wrap=$('#nutriSummary'); wrap.innerHTML='';
+  const grid=document.createElement('div'); grid.className='grid2'; grid.style.marginTop='8px';
+  ['veg','salt','fiber','protein','kcal','fat'].forEach(k=>{
+    const t=C.TARGET[k]; const v=avg[k]; const s=C.evalNutrient(k,v);
+    const color=s==='ok'?'var(--accent)':'var(--warn)';
+    const cell=document.createElement('div');
+    cell.style.cssText='border:1px solid var(--line);border-radius:10px;padding:8px 10px';
+    cell.innerHTML=`<div class="muted" style="font-size:11px">${t.label}（目標 ${targetText(k)}${t.unit}）</div>
+      <div style="font-size:18px;font-weight:800;color:${color}">${fmtVal(k,v)}<span style="font-size:11px;color:var(--sub);font-weight:600"> ${t.unit}/日</span>
+        <span style="font-size:12px;color:${color}">${s==='ok'?'適正':(s==='low'?'やや不足':'やや過剰')}</span></div>`;
+    grid.appendChild(cell);
+  });
+  wrap.appendChild(grid);
+}
+
+/* ---------- レシピ詳細 ---------- */
+function openRecipe(id){
+  const r=C.REC[id], im=ingMap();
+  const ingHtml=Object.keys(r.use).map(iid=>{
+    const ing=im[iid]; const q=r.use[iid];
+    const disp = q<1 && ing.unit!=='g' && ing.unit!=='ml' ? (q*100).toFixed(0)+'%' : q;
+    return `<div class="ing"><span>${ing.name}</span><span class="muted">${disp}${q<1&&(ing.unit==='玉'||ing.unit==='個'||ing.unit==='本'||ing.unit==='パック')?'':' '+ing.unit} ・約${yen(q/ing.size*ing.price)}</span></div>`;
+  }).join('');
+  $('#recipeSheet').innerHTML=`
+    <h3>${r.name}</h3>
+    <div class="pill-row">
+      <span class="chip gray">${r.type==='breakfast'?'朝':'夜'}</span>
+      <span class="chip o">${r.time}分</span>
+      <span class="chip b">${r.cuisine}</span>
+      ${(r.comp||[]).map(c=>`<span class="chip g">${({P:'たんぱく',V:'野菜',C:'主食',D:'乳/卵',F:'果物'})[c]}</span>`).join('')}
+      <span class="chip gray">約${yen(C.consumedCost(id,im))}</span>
+    </div>
+    <div style="margin-top:12px;font-weight:700;font-size:13px">この一品の栄養（1人分）</div>
+    <div class="muted" style="font-size:12.5px;margin-top:2px">${(()=>{const n=C.recipeNutrition(id,im);
+      return `エネルギー ${Math.round(n.kcal)}kcal ・ たんぱく質 ${Math.round(n.protein)}g ・ 脂質 ${Math.round(n.fat)}g ・ 食物繊維 ${n.fiber.toFixed(1)}g ・ 塩分 ${n.salt.toFixed(1)}g ・ 野菜 ${Math.round(n.veg)}g`;})()}</div>
+    <div style="margin-top:12px;font-weight:700;font-size:13px">材料（1人分）</div>
+    <div style="margin-top:14px;font-weight:700;font-size:13px">作り方</div>
+    <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    <button class="ghost" style="width:100%;margin-top:16px" onclick="closeModal()">閉じる</button>`;
+  $('#recipeModal').classList.add('on');
+}
+function closeModal(){ $('#recipeModal').classList.remove('on'); }
+$('#recipeModal').addEventListener('click',e=>{ if(e.target.id==='recipeModal') closeModal(); });
+
+/* ---------- 作り直す ---------- */
+$('#btnRegen').addEventListener('click',()=>{
+  state.plan = C.chooseBestPlan({budget:state.settings.budget, ingMap:ingMap(), startSeed:(Date.now()>>>0)||1});
+  persist(); renderMenu(); toast('新しい献立に切り替えました');
+});
+
+/* ---------- 買い物リスト ---------- */
+function renderShop(){
+  const inc=$('#incSeason').checked;
+  const {items,total}=C.buildShoppingList(state.plan,{includeSeason:inc, ingMap:ingMap()});
+  $('#shopTotal').textContent=yen(total);
+  const area=$('#shopArea'); area.innerHTML='';
+  const catName={carb:'主食',protein:'肉・魚・たんぱく',veg:'野菜',dairy:'卵・乳製品',fruit:'果物',season:'調味料・常備品'};
+  let curCat=null, table=null;
+  items.forEach(it=>{
+    if(it.cat!==curCat){ curCat=it.cat;
+      const h=document.createElement('div'); h.className='cat'; h.textContent=catName[it.cat]||'その他';
+      const card=document.createElement('div'); card.className='card'; card.style.margin='6px 0';
+      table=document.createElement('table'); table.className='list';
+      card.appendChild(table); area.appendChild(h); area.appendChild(card);
+    }
+    const tr=document.createElement('tr');
+    const packDisp = it.packs+'パック'+(it.packs>1?` (${it.size}${it.unit}×${it.packs})`:'');
+    tr.innerHTML=`<td style="width:24px"><input type="checkbox" class="chk"></td>
+      <td><div style="font-weight:600">${it.name}</div>
+        <div class="muted">${packDisp}</div></td>
+      <td class="r">${yen(it.cost)}</td>`;
+    tr.querySelector('input').addEventListener('change',e=>{
+      tr.style.opacity=e.target.checked?.45:1;
+      tr.style.textDecoration=e.target.checked?'line-through':'none';
+    });
+    table.appendChild(tr);
+  });
+  if(!items.length){ area.innerHTML='<div class="empty">表示する品目がありません。</div>'; }
+}
+$('#incSeason').addEventListener('change',renderShop);
+$('#btnCopy').addEventListener('click',()=>{
+  const inc=$('#incSeason').checked;
+  const {items,total}=C.buildShoppingList(state.plan,{includeSeason:inc, ingMap:ingMap()});
+  const txt='【今週の買い物リスト】\n'+items.map(it=>`□ ${it.name} ${it.packs}パック  ${yen(it.cost)}`).join('\n')+`\n合計 約${yen(total)}`;
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast('コピーしました')); }
+  else toast('コピーに対応していません');
+});
+
+/* ---------- 価格グラフ ---------- */
+let _dpr=window.devicePixelRatio||1;
+function _setupCanvas(cv){ const w=cv.clientWidth||300, h=parseInt(cv.getAttribute('height'))||200;
+  cv.width=w*_dpr; cv.height=h*_dpr; const ctx=cv.getContext('2d'); ctx.setTransform(_dpr,0,0,_dpr,0,0); ctx.clearRect(0,0,w,h); return {ctx,w,h}; }
+function drawLine(cv,labels,data,color,flags){ const {ctx,w,h}=_setupCanvas(cv); if(!data.length) return;
+  const padL=46,padR=10,padT=10,padB=22, cw=w-padL-padR, ch=h-padT-padB;
+  let mn=Math.min(...data), mx=Math.max(...data); if(mn===mx){ mn=Math.max(0,mn*0.9); mx=mx*1.1||1; }
+  const X=i=>padL+(data.length===1?cw/2:cw*i/(data.length-1)), Y=v=>padT+ch-(v-mn)/(mx-mn||1)*ch;
+  ctx.strokeStyle='#e6e9ee'; ctx.fillStyle='#67727e'; ctx.font='10px sans-serif'; ctx.textAlign='right';
+  for(let g=0;g<=3;g++){ const val=mn+(mx-mn)*g/3, yy=Y(val); ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(w-padR,yy); ctx.stroke(); ctx.fillText('¥'+Math.round(val),padL-5,yy+3); }
+  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
+  data.forEach((v,i)=>{ const xx=X(i),yy=Y(v); i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy); }); ctx.stroke();
+  data.forEach((v,i)=>{ ctx.beginPath(); ctx.fillStyle=(flags&&flags[i])?'#9aa6b2':color; ctx.arc(X(i),Y(v),3.5,0,Math.PI*2); ctx.fill(); });
+  ctx.fillStyle='#67727e'; ctx.textAlign='center';
+  const idxs=data.length<=4?data.map((_,i)=>i):[0,Math.floor(data.length/2),data.length-1];
+  idxs.forEach(i=>ctx.fillText(labels[i]||'',X(i),h-6)); }
+function drawBars(cv,labels,data,color){ const {ctx,w,h}=_setupCanvas(cv); if(!data.length) return;
+  const padL=46,padR=10,padT=10,padB=22, cw=w-padL-padR, ch=h-padT-padB, mx=Math.max(...data,1), n=data.length, gap=cw/n, bw=gap*0.6;
+  ctx.strokeStyle='#e6e9ee'; ctx.fillStyle='#67727e'; ctx.font='10px sans-serif'; ctx.textAlign='right';
+  for(let g=0;g<=3;g++){ const val=mx*g/3, yy=padT+ch-val/mx*ch; ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(w-padR,yy); ctx.stroke(); ctx.fillText('¥'+Math.round(val),padL-5,yy+3); }
+  ctx.fillStyle=color; data.forEach((v,i)=>{ const x=padL+gap*i+(gap-bw)/2, bh=v/mx*ch; ctx.fillRect(x,padT+ch-bh,bw,bh); });
+  ctx.fillStyle='#67727e'; ctx.textAlign='center';
+  const idxs=n<=6?data.map((_,i)=>i):[0,Math.floor(n/2),n-1];
+  idxs.forEach(i=>ctx.fillText(labels[i]||'',padL+gap*i+gap/2,h-6)); }
+function fillPriceSelect(){
+  const sel=$('#priceSelect'); sel.innerHTML='';
+  const cats={carb:'主食',protein:'たんぱく',veg:'野菜',dairy:'卵・乳',fruit:'果物',season:'調味料'};
+  ['carb','protein','veg','dairy','fruit','season'].forEach(cat=>{
+    const grp=document.createElement('optgroup'); grp.label=cats[cat];
+    state.ingredients.filter(i=>i.cat===cat).forEach(i=>{
+      const o=document.createElement('option'); o.value=i.id; o.textContent=i.name; grp.appendChild(o);
+    });
+    sel.appendChild(grp);
+  });
+}
+function renderPrice(){
+  if(!$('#priceSelect').options.length) fillPriceSelect();
+  const id=$('#priceSelect').value || state.ingredients[0].id;
+  const ing=ingMap()[id];
+  const hist=(ing.history||[]).slice();
+  drawLine($('#priceChart'), hist.map(h=>h.date.slice(5)), hist.map(h=>h.price), '#2f9e6e', hist.map(h=>h.source==='初期推定'));
+  const last=hist[hist.length-1], first=hist[0]; const diff=last.price-first.price;
+  $('#priceMeta').innerHTML=`現在 <b>${yen(last.price)}</b> / ${ing.size}${ing.unit}（${last.source}）`+(hist.length>1?` ・初期比 ${diff>=0?'+':''}${yen(diff)}`:'')+`<br><span style="color:#9aa6b2">●</span>初期推定 <span style="color:#2f9e6e">●</span>レシート/手入力`;
+  const log=state.costLog||[];
+  if(log.length){ drawBars($('#totalChart'), log.map(l=>l.date.slice(5)), log.map(l=>l.total), '#2563eb'); $('#totalMeta').textContent='レシート登録時点の、調味料込み買い物総額の推移です。'; }
+  else { _setupCanvas($('#totalChart')); }
+  renderPriceTable();
+}
+$('#priceSelect').addEventListener('change',renderPrice);
+function renderPriceTable(){
+  const wrap=$('#priceTable');
+  wrap.innerHTML='';
+  const t=document.createElement('table'); t.className='list';
+  state.ingredients.forEach(ing=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><div style="font-weight:600">${ing.name}</div><div class="muted">${ing.size}${ing.unit}あたり</div></td>
+      <td class="r" style="width:120px"><input type="number" value="${ing.price}" min="0" data-id="${ing.id}"></td>`;
+    t.appendChild(tr);
+  });
+  wrap.appendChild(t);
+  wrap.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',e=>{
+    const ing=ingMap()[e.target.dataset.id];
+    if(C.applyPriceUpdate(ing,e.target.value,todayStr(),'手入力')){ persist(); renderMenu(); toast(ing.name+'を更新'); }
+  }));
+}
+
+/* ---------- レシート登録 ---------- */
+let receiptImage=null;
+function renderReceiptTab(){
+  const q=$('#ingSearch').value.trim();
+  const list=$('#receiptList'); list.innerHTML='';
+  const cats={carb:'主食',protein:'たんぱく',veg:'野菜',dairy:'卵・乳',fruit:'果物',season:'調味料'};
+  let curCat=null;
+  state.ingredients.filter(i=>!q||i.name.includes(q)).forEach(ing=>{
+    if(ing.cat!==curCat){ curCat=ing.cat;
+      const h=document.createElement('div'); h.className='cat'; h.textContent=cats[ing.cat]||'その他'; list.appendChild(h); }
+    const row=document.createElement('div'); row.className='price-edit';
+    row.innerHTML=`<span class="nm">${ing.name}</span>
+      <span class="unit">${ing.size}${ing.unit}</span>
+      <input type="number" min="0" placeholder="${ing.price}" data-id="${ing.id}">`;
+    list.appendChild(row);
+  });
+  renderReceiptHistory();
+}
+$('#ingSearch').addEventListener('input',renderReceiptTab);
+$('#receiptFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=900; let{width:w,height:h}=img;
+      if(w>max||h>max){ const ra=Math.min(max/w,max/h); w=w*ra|0; h=h*ra|0; }
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      receiptImage=cv.toDataURL('image/jpeg',0.6);
+      const p=$('#receiptPreview'); p.src=receiptImage; p.style.display='block';
+      toast('レシート画像を読み込みました');
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+});
+$('#btnSaveReceipt').addEventListener('click',()=>{
+  const inputs=$('#receiptList').querySelectorAll('input');
+  const updated=[]; const im=ingMap();
+  inputs.forEach(inp=>{ const v=inp.value.trim();
+    if(v!==''){ const ing=im[inp.dataset.id];
+      if(C.applyPriceUpdate(ing,v,todayStr(),'レシート')) updated.push({id:ing.id,price:Math.round(+v)}); }});
+  if(!updated.length && !receiptImage){ toast('金額を入れるか画像を選んでください'); return; }
+  const {total}=C.buildShoppingList(state.plan,{includeSeason:true, ingMap:ingMap()});
+  state.costLog.push({date:todayStr(), total});
+  state.receipts.unshift({date:todayStr(), image:receiptImage, items:updated});
+  persist();
+  inputs.forEach(i=>i.value=''); receiptImage=null;
+  $('#receiptPreview').style.display='none'; $('#receiptFile').value='';
+  renderReceiptTab(); renderMenu();
+  toast(updated.length+'件の価格を最新化しました');
+});
+function renderReceiptHistory(){
+  const wrap=$('#receiptHistory'); wrap.innerHTML='';
+  if(!state.receipts.length){ wrap.innerHTML='<div class="empty">まだレシートがありません。</div>'; return; }
+  state.receipts.forEach(r=>{
+    const im=ingMap();
+    const names=r.items.map(it=>`${im[it.id]?im[it.id].name:it.id} ${yen(it.price)}`).join('、')||'画像のみ';
+    const div=document.createElement('div'); div.className='card'; div.style.margin='6px 0';
+    div.innerHTML=`<div class="row between"><b>${r.date}</b><span class="muted">${r.items.length}件</span></div>
+      <div class="muted" style="margin-top:4px">${names}</div>
+      ${r.image?`<img class="thumb" src="${r.image}" style="max-height:160px">`:''}`;
+    wrap.appendChild(div);
+  });
+}
+
+/* ---------- データ入出力 ---------- */
+$('#btnExport').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='kondate_backup_'+todayStr()+'.json'; a.click(); toast('書き出しました');
+});
+$('#btnImport').addEventListener('click',()=>$('#importFile').click());
+$('#importFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader(); rd.onload=ev=>{ try{ const s=JSON.parse(ev.target.result);
+    if(s.ingredients&&s.plan){ state=migrate(s); persist(); renderAll(); toast('読み込みました'); }
+    else toast('形式が違います'); }catch(err){ toast('読み込み失敗'); } };
+  rd.readAsText(f);
+});
+$('#btnReset').addEventListener('click',()=>{
+  if(confirm('価格・履歴・献立をすべて初期状態に戻します。よろしいですか？')){
+    state=freshState(); persist(); renderAll(); toast('初期化しました');
+  }
+});
+
+/* ---------- 初期描画 ---------- */
+function renderAll(){ renderMenu(); renderShop(); fillPriceSelect(); renderReceiptTab(); if($('#tab-price').classList.contains('on')) renderPrice(); }
+renderMenu();
+window.closeModal=closeModal;
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));}</script>
+</body>
+</html>
