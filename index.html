@@ -183,6 +183,21 @@ const INGREDIENTS = [
   {id:'wakame', name:'乾燥わかめ', cat:'season', unit:'g', size:60, price:200, g:1, n:[117,18,4,42,32,23]}
 ];
 
+/* ---- 保存方法と傷みやすさ ----
+   store: 冷凍 / 冷蔵 / 常温（買って帰ったらどう仕舞うか）
+   perish: 1=最も傷みやすい(早く使う)〜3=日持ち / 0=非生鮮(常温・冷凍ストック)
+   前提: 冷凍庫あり・小分け冷凍OK。生肉と魚は小分け冷凍、生鮮野菜は傷みやすい順に消費。 */
+const STORAGE = {
+  egg:['冷蔵',3], chicken_b:['冷凍',1], chicken_t:['冷凍',1], pork_k:['冷凍',1], pork_b:['冷凍',1],
+  mince:['冷凍',1], salmon:['冷凍',1], saba:['冷凍',1], tuna:['常温',0], tofu:['冷蔵',1], natto:['冷蔵',2],
+  rice:['常温',0], bread:['冷凍',0], pasta:['常温',0], udon:['冷蔵',2], oats:['常温',0],
+  onion:['常温',3], carrot:['冷蔵',3], potato:['常温',3], cabbage:['冷蔵',3], moyashi:['冷蔵',1],
+  spinach:['冷蔵',1], komatsu:['冷蔵',1], broccoli:['冷蔵',2], minitomato:['冷蔵',2], piman:['冷蔵',2],
+  negi:['冷蔵',2], shimeji:['冷蔵',2], daikon:['冷蔵',3], mixveg:['冷凍',0],
+  milk:['冷蔵',2], yogurt:['冷蔵',3], cheese:['冷蔵',3], banana:['常温',2]
+};
+INGREDIENTS.forEach(x=>{ const s=STORAGE[x.id]||['常温',0]; x.store=s[0]; x.perish=s[1]; });
+
 /* 朝+夜の2食ぶんの栄養目標（昼は別に食べる前提で1日目安の約2/3）
    方針: カロリー控えめ / 生活習慣病対策として 塩分↓・食物繊維↑・野菜↑ */
 const TARGET = {
@@ -259,7 +274,7 @@ const RECIPES = [
    steps:['パスタをゆでる','具を炒めケチャップで味付け','パスタを和えミニトマトを添える']},
   {id:'D7', type:'dinner', name:'野菜カレーライス', time:20, cuisine:'洋', main:'豚', comp:['P','V','C'],
    use:{pork_k:90,onion:0.8,carrot:0.5,potato:1,curry:0.35,rice:100},
-   steps:['野菜と豚を炒める','水を加えて煮る','ルーを溶かしご飯に']},
+   steps:['玉ねぎ・にんじん・じゃがいもと豚を炒める','水を加えて煮る','ルーを溶かしご飯に']},
   {id:'D8', type:'dinner', name:'塩さば焼きと大根おろし', time:15, cuisine:'和', main:'さば', comp:['P','V','C'],
    use:{saba:1,daikon:0.25,soy:4,miso:16,dashi:1,rice:100},
    steps:['さばを焼く','大根をたっぷりおろす','味噌汁とご飯を添える']},
@@ -274,7 +289,7 @@ const RECIPES = [
    steps:['ブロッコリーを下ゆで','鶏・にんじん・にんにくを炒める','醤油で味付けご飯に']},
   {id:'D12', type:'dinner', name:'たっぷり野菜の焼きうどん', time:14, cuisine:'和', main:'豚', comp:['C','P','V'],
    use:{udon:1,pork_k:70,cabbage:0.12,carrot:0.3,mentsuyu:25,oil:4,moyashi:0.5},
-   steps:['豚と野菜・もやしを炒める','うどんを加える','めんつゆで味付け']},
+   steps:['豚とキャベツ・にんじん・もやしを炒める','うどんを加える','めんつゆで味付け']},
   {id:'D13', type:'dinner', name:'ツナと卵の野菜チャーハン', time:13, cuisine:'中', main:'卵', comp:['P','C','V'],
    use:{rice:130,egg:1,tuna:0.5,negi:0.3,gara:3,sesoil:4,mixveg:60,carrot:0.2},
    steps:['卵とご飯を炒める','ツナ・ねぎ・ミックスベジ・にんじんを加える','鶏ガラで味付け']},
@@ -301,10 +316,10 @@ const RECIPES = [
    steps:['鶏むねと玉ねぎ・ピーマンを炒める','トマトとにんにくで煮込む','ご飯を添える']},
   {id:'D21', type:'dinner', name:'野菜たっぷり玉子炒め', time:13, cuisine:'中', main:'卵', comp:['P','V','C'],
    use:{egg:2,cabbage:0.12,carrot:0.3,moyashi:0.5,gara:3,sesoil:4,soy:5,rice:100},
-   steps:['野菜ともやしを炒める','溶き卵を加えて炒める','鶏ガラ・醤油で味付けご飯に']},
+   steps:['キャベツ・にんじん・もやしを炒める','溶き卵を加えて炒める','鶏ガラ・醤油で味付けご飯に']},
   {id:'D22', type:'dinner', name:'ねばねば納豆丼', time:10, cuisine:'和', main:'納豆', comp:['P','V','C'],
    use:{natto:1,egg:1,moyashi:0.5,komatsu:0.4,nori:1,soy:6,rice:120},
-   steps:['もやしと小松菜をさっと茹でる','ご飯に納豆・卵・野菜をのせる','海苔と醤油で仕上げ']},
+   steps:['もやしと小松菜をさっと茹でる','ご飯に納豆・卵・もやし・小松菜をのせる','海苔と醤油で仕上げ']},
   {id:'D23', type:'dinner', name:'豚バラ大根', time:20, cuisine:'和', main:'豚', comp:['P','V','C'],
    use:{pork_b:80,daikon:0.3,negi:0.3,soy:10,sugar:5,mentsuyu:10,rice:100},
    steps:['豚バラと大根を炒める','水・醤油・砂糖・めんつゆで煮る','ねぎを散らしご飯に']},
@@ -319,7 +334,7 @@ const RECIPES = [
    steps:['豚と大根・にんじんを煮る','味噌を溶いて豚汁にする','ご飯を添える']},
   {id:'B15', type:'breakfast', name:'野菜スープごはん', time:10, cuisine:'洋', main:'卵', comp:['P','V','C'],
    use:{rice:80,mixveg:60,cabbage:0.1,gara:3,egg:1},
-   steps:['野菜を鶏ガラスープで煮る','溶き卵を回し入れる','ご飯を加える']},
+   steps:['冷凍ミックスベジとキャベツを鶏ガラスープで煮る','溶き卵を回し入れる','ご飯を加える']},
   {id:'B16', type:'breakfast', name:'焼き鮭と青菜のっけご飯', time:11, cuisine:'和', main:'鮭', comp:['P','V','C'],
    use:{rice:100,salmon:0.5,komatsu:0.4,nori:1,soy:4},
    steps:['鮭を焼いてほぐす','小松菜を茹でる','ご飯にのせ海苔と醤油で仕上げ']}
@@ -502,24 +517,50 @@ function chooseBestPlan(opts){
 function buildShoppingList(plan, opts){
   opts = opts||{}; const includeSeason = opts.includeSeason!==false;
   const ingMap = opts.ingMap||ING;
-  const need={}; // id -> 必要量(unit)
-  const add=(recipeId)=>{ const r=REC[recipeId];
-    for(const id in r.use){ need[id]=(need[id]||0)+r.use[id]; } };
-  for(let d=0; d<7; d++){ add(plan.breakfast[d]); add(plan.dinner[d]); }
+  const need={};   // id -> 必要量(unit)
+  const uses={};   // id -> [{recipeId,name,day,meal,qty,grams}] どの料理で何g使うか
+  const add=(recipeId,day,meal)=>{ const r=REC[recipeId];
+    for(const id in r.use){ const q=r.use[id];
+      need[id]=(need[id]||0)+q;
+      (uses[id]=uses[id]||[]).push({recipeId, name:r.name, day, meal, qty:q,
+        grams:q*((ingMap[id]&&ingMap[id].g)||1)});
+    } };
+  for(let d=0; d<7; d++){ add(plan.breakfast[d],d,'breakfast'); add(plan.dinner[d],d,'dinner'); }
   const items=[];
   for(const id in need){
     const ing=ingMap[id];
     if(!includeSeason && ing.cat==='season') continue;
     const qty=need[id];
+    const g=ing.g||1;
     const packs=Math.max(1,Math.ceil(qty/ing.size - 1e-9));
+    const leftover=packs*ing.size - qty;          // 買った量から週の必要量を引いた余り(unit)
     items.push({id, name:ing.name, cat:ing.cat, unit:ing.unit, size:ing.size,
-      need:qty, packs, price:ing.price, cost:packs*ing.price});
+      need:qty, grams:qty*g, packs, leftover, leftoverGrams:leftover*g,
+      store:ing.store||'常温', perish:ing.perish==null?0:ing.perish,
+      price:ing.price, cost:packs*ing.price, byRecipe:uses[id]||[]});
   }
   // カテゴリ→名前で安定ソート
   const order={carb:0,protein:1,veg:2,dairy:3,fruit:4,season:5,other:6};
   items.sort((a,b)=> (order[a.cat]-order[b.cat]) || a.name.localeCompare(b.name,'ja'));
   const total=items.reduce((s,x)=>s+x.cost,0);
   return {items, total};
+}
+
+/* 買い物品を保存方法ごとに分け、冷蔵は傷みやすい順(perish小=先)に並べる */
+function groupByStorage(items){
+  const freeze=[], fridge=[], pantry=[];
+  items.forEach(it=>{ const s=it.store||'常温';
+    if(s==='冷凍') freeze.push(it); else if(s==='冷蔵') fridge.push(it); else pantry.push(it); });
+  fridge.sort((a,b)=> (a.perish||9)-(b.perish||9) || a.name.localeCompare(b.name,'ja'));
+  return {freeze, fridge, pantry};
+}
+
+/* そのレシピで「冷凍した生肉・魚」を使うか（前夜の解凍が要る品名の配列を返す）。空なら解凍不要。 */
+function recipeThaw(recipeId, ingMap){
+  ingMap = ingMap || ING; const r=REC[recipeId]; const out=[];
+  for(const id in r.use){ const ing=ingMap[id];
+    if(ing && ing.store==='冷凍' && ing.cat==='protein') out.push(ing.name); }
+  return out;
 }
 
 /* 価格更新: 最新値を currentPrice として履歴に追加（同日なら上書き） */
@@ -584,7 +625,7 @@ function learnKeyFromLine(line){
 const api = {INGREDIENTS,RECIPES,ING,REC,BREAKFASTS,DINNERS,TARGET,
   consumedCost,recipeNutrition,dayNutrition,evalNutrient,dayStatus,dayPenalty,
   dayComponents,dayBalanced,generatePlan,weeklyConsumedCost,weeklyPenalty,weeklyNutrition,
-  monthlyProjection,chooseBestPlan,buildShoppingList,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,ALIASES};
+  monthlyProjection,chooseBestPlan,buildShoppingList,groupByStorage,recipeThaw,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,ALIASES,STORAGE};
 if(typeof module!=='undefined' && module.exports){ module.exports=api; }
 root.Core = api;
 })(typeof window!=='undefined'?window:globalThis);
@@ -749,6 +790,7 @@ function migrate(s){
   // 既存食材にも栄養データ(g/n/veg等)を最新カタログから補完。価格と履歴はユーザー値を維持。
   s.ingredients.forEach(i=>{ const cat=C.ING[i.id];
     if(cat){ i.g=cat.g; i.n=cat.n; i.veg=cat.veg; i.cat=cat.cat; i.unit=cat.unit; i.size=cat.size; i.name=cat.name;
+      i.store=cat.store; i.perish=cat.perish;
       if(i.price==null) i.price=cat.price;
       if(!i.history||!i.history.length) i.history=[{date:todayStr(),price:i.price,source:'初期推定'}]; } });
   // 新規食材を追加
@@ -810,11 +852,11 @@ function renderMenu(){
       </div>
       <div class="meal" data-r="${b.id}">
         <div class="ml">朝</div><div class="mm"><div class="mn">${b.name}</div>
-          <div class="mt">${b.time}分・${b.cuisine}・約${yen(C.consumedCost(b.id,im))}</div></div>
+          <div class="mt">${b.time}分・${b.cuisine}・約${yen(C.consumedCost(b.id,im))}${thawTag(b.id,im)}</div></div>
       </div>
       <div class="meal" data-r="${dn.id}">
         <div class="ml">夜</div><div class="mm"><div class="mn">${dn.name}</div>
-          <div class="mt">${dn.time}分・${dn.cuisine}・約${yen(C.consumedCost(dn.id,im))}</div></div>
+          <div class="mt">${dn.time}分・${dn.cuisine}・約${yen(C.consumedCost(dn.id,im))}${thawTag(dn.id,im)}</div></div>
       </div>
       <div style="padding:8px 12px;border-top:1px solid var(--line)">${nutriChips(n,st)}</div>`;
     area.appendChild(dayDiv);
@@ -853,13 +895,31 @@ function renderNutriSummary(im){
 }
 
 /* ---------- レシピ詳細 ---------- */
+/* 保存バッジ（冷凍=青/冷蔵=緑/常温=灰） */
+function storeBadge(store){
+  const map={'冷凍':['b','❄ 冷凍'],'冷蔵':['g','冷蔵'],'常温':['gray','常温']};
+  const v=map[store]||map['常温'];
+  return `<span class="chip ${v[0]}" style="font-size:10.5px">${v[1]}</span>`;
+}
+/* レシピの分量表示（1人分）。重量はそのまま、個数は整数なら個数・端数はグラム換算。 */
+function fmtQty(ing,q){
+  if(ing.unit==='g'||ing.unit==='ml') return Math.round(q)+ing.unit;
+  if(Number.isInteger(q)) return q+ing.unit;
+  return '約'+Math.round(q*(ing.g||1))+'g';
+}
+/* 献立カード用: 冷凍肉・魚を使う食事に「要解凍」チップ */
+function thawTag(id,im){ const t=C.recipeThaw(id,im); return t.length?` <span class="chip o" style="font-size:10px">❄要解凍</span>`:''; }
 function openRecipe(id){
   const r=C.REC[id], im=ingMap();
   const ingHtml=Object.keys(r.use).map(iid=>{
     const ing=im[iid]; const q=r.use[iid];
-    const disp = q<1 && ing.unit!=='g' && ing.unit!=='ml' ? (q*100).toFixed(0)+'%' : q;
-    return `<div class="ing"><span>${ing.name}</span><span class="muted">${disp}${q<1&&(ing.unit==='玉'||ing.unit==='個'||ing.unit==='本'||ing.unit==='パック')?'':' '+ing.unit} ・約${yen(q/ing.size*ing.price)}</span></div>`;
+    return `<div class="ing"><span>${ing.name} ${storeBadge(ing.store)}</span>`+
+      `<span class="muted">${fmtQty(ing,q)} ・約${yen(q/ing.size*ing.price)}</span></div>`;
   }).join('');
+  const thaw=C.recipeThaw(id,im);
+  const thawHtml = thaw.length
+    ? `<div class="ing" style="border:0;color:var(--warn);font-size:12.5px;padding-top:8px">❄ ${thaw.join('・')}は冷凍中。前夜に冷蔵庫へ移して解凍（急ぐ時はレンジ解凍）。表示の調理時間に解凍の手間が加わります。</div>`
+    : '';
   $('#recipeSheet').innerHTML=`
     <h3>${r.name}</h3>
     <div class="pill-row">
@@ -873,6 +933,8 @@ function openRecipe(id){
     <div class="muted" style="font-size:12.5px;margin-top:2px">${(()=>{const n=C.recipeNutrition(id,im);
       return `エネルギー ${Math.round(n.kcal)}kcal ・ たんぱく質 ${Math.round(n.protein)}g ・ 脂質 ${Math.round(n.fat)}g ・ 食物繊維 ${n.fiber.toFixed(1)}g ・ 塩分 ${n.salt.toFixed(1)}g ・ 野菜 ${Math.round(n.veg)}g`;})()}</div>
     <div style="margin-top:12px;font-weight:700;font-size:13px">材料（1人分）</div>
+    <div style="margin-top:4px">${ingHtml}</div>
+    ${thawHtml}
     <div style="margin-top:14px;font-weight:700;font-size:13px">作り方</div>
     <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
     <button class="ghost" style="width:100%;margin-top:16px" onclick="closeModal()">閉じる</button>`;
@@ -888,11 +950,30 @@ $('#btnRegen').addEventListener('click',()=>{
 });
 
 /* ---------- 買い物リスト ---------- */
+const DOW=['日','月','火','水','木','金','土'];
+/* 週の必要量の表示（重量はg/ml、個数は整数なら個数・端数はグラム換算） */
+function fmtNeed(it){
+  if(it.unit==='g'||it.unit==='ml') return '約'+Math.round(it.grams)+it.unit;
+  if(Number.isInteger(it.need)) return it.need+it.unit;
+  return '約'+Math.round(it.grams)+'g';
+}
+function fmtLeftover(it){
+  if(it.unit==='g'||it.unit==='ml') return '約'+Math.round(it.leftoverGrams)+it.unit;
+  if(Number.isInteger(it.need)&&Number.isInteger(it.leftover)) return it.leftover+it.unit;
+  return '約'+Math.round(it.leftoverGrams)+'g';
+}
+/* 各使用回の分量表示 */
+function fmtUse(it,u){
+  if(it.unit==='g'||it.unit==='ml') return Math.round(u.grams)+it.unit;
+  if(Number.isInteger(u.qty)) return u.qty+it.unit;
+  return Math.round(u.grams)+'g';
+}
 function renderShop(){
   const inc=$('#incSeason').checked;
   const {items,total}=C.buildShoppingList(state.plan,{includeSeason:inc, ingMap:ingMap()});
   $('#shopTotal').textContent=yen(total);
   const area=$('#shopArea'); area.innerHTML='';
+  if(!items.length){ area.innerHTML='<div class="empty">表示する品目がありません。</div>'; return; }
   const catName={carb:'主食',protein:'肉・魚・たんぱく',veg:'野菜',dairy:'卵・乳製品',fruit:'果物',season:'調味料・常備品'};
   let curCat=null, table=null;
   items.forEach(it=>{
@@ -903,24 +984,50 @@ function renderShop(){
       card.appendChild(table); area.appendChild(h); area.appendChild(card);
     }
     const tr=document.createElement('tr');
-    const packDisp = it.packs+'パック'+(it.packs>1?` (${it.size}${it.unit}×${it.packs})`:'');
-    tr.innerHTML=`<td style="width:24px"><input type="checkbox" class="chk"></td>
-      <td><div style="font-weight:600">${it.name}</div>
-        <div class="muted">${packDisp}</div></td>
-      <td class="r">${yen(it.cost)}</td>`;
-    tr.querySelector('input').addEventListener('change',e=>{
+    const packDisp = it.packs+'パック'+(it.packs>1?`(${it.size}${it.unit}×${it.packs})`:`(${it.size}${it.unit})`);
+    const leftover = it.leftoverGrams>3 ? `・余り ${fmtLeftover(it)}` : '';
+    // 使う料理の内訳（タップで展開）
+    const uses=(it.byRecipe||[]).slice().sort((a,b)=> a.day-b.day || (a.meal<b.meal?1:-1));
+    const useRows=uses.map(u=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0">
+        <span class="muted">${DOW[ (u.day+1)%7 ]}曜${u.meal==='breakfast'?'朝':'夜'}・${u.name}</span>
+        <span class="muted" style="white-space:nowrap">${fmtUse(it,u)}</span></div>`).join('');
+    const breakdown = uses.length
+      ? `<details style="margin-top:4px"><summary>使う料理 ${uses.length}回</summary><div style="padding:4px 0 2px">${useRows}</div></details>`
+      : '';
+    tr.innerHTML=`<td style="width:24px;vertical-align:top;padding-top:11px"><input type="checkbox" class="chk"></td>
+      <td><div style="font-weight:600">${it.name} ${storeBadge(it.store)}</div>
+        <div class="muted">必要 ${fmtNeed(it)} ・買う ${packDisp}${leftover}</div>
+        ${breakdown}</td>
+      <td class="r" style="vertical-align:top;padding-top:11px">${yen(it.cost)}</td>`;
+    tr.querySelector('input.chk').addEventListener('change',e=>{
       tr.style.opacity=e.target.checked?.45:1;
-      tr.style.textDecoration=e.target.checked?'line-through':'none';
+      tr.querySelectorAll('td>div').forEach(d=>d.style.textDecoration=e.target.checked?'line-through':'none');
     });
     table.appendChild(tr);
   });
-  if(!items.length){ area.innerHTML='<div class="empty">表示する品目がありません。</div>'; }
+  renderStorageGuide(area, items);
+}
+/* 保存と消費の順番の案内（買い物リストの下） */
+function renderStorageGuide(area, items){
+  const {freeze,fridge,pantry}=C.groupByStorage(items);
+  const h=document.createElement('div'); h.className='cat'; h.textContent='保存と消費のコツ';
+  const card=document.createElement('div'); card.className='card'; card.style.margin='6px 0';
+  const nm=arr=>arr.map(x=>x.name).join('・')||'—';
+  const fridgeNm=fridge.map(x=> x.perish===1? `${x.name}<span class="muted">(早めに)</span>` : x.name).join('・')||'—';
+  card.innerHTML=`
+    <div style="font-size:13px;line-height:1.7">
+      <div><b>❄ すぐ小分け冷凍</b><br><span class="muted" style="font-size:13px">${nm(freeze)}</span></div>
+      <div style="margin-top:8px"><b>🧊 冷蔵（傷みやすい順に使う）</b><br><span class="muted" style="font-size:13px">${fridgeNm}</span></div>
+      <div style="margin-top:8px"><b>🗄 常温</b><br><span class="muted" style="font-size:13px">${nm(pantry)}</span></div>
+    </div>
+    <div class="legend" style="margin-top:10px">冷凍した肉・魚を使う日は、前夜に冷蔵庫へ移して解凍を（急ぐ時はレンジ解凍）。レシピの調理時間に解凍の手間が加わります。冷蔵の生鮮は「早めに」の品から先に使うと傷ませずに済みます。</div>`;
+  area.appendChild(h); area.appendChild(card);
 }
 $('#incSeason').addEventListener('change',renderShop);
 $('#btnCopy').addEventListener('click',()=>{
   const inc=$('#incSeason').checked;
   const {items,total}=C.buildShoppingList(state.plan,{includeSeason:inc, ingMap:ingMap()});
-  const txt='【今週の買い物リスト】\n'+items.map(it=>`□ ${it.name} ${it.packs}パック  ${yen(it.cost)}`).join('\n')+`\n合計 約${yen(total)}`;
+  const txt='【今週の買い物リスト】\n'+items.map(it=>`□ ${it.name} ${it.packs}パック（必要 ${fmtNeed(it)}）  ${yen(it.cost)}`).join('\n')+`\n合計 約${yen(total)}`;
   if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast('コピーしました')); }
   else toast('コピーに対応していません');
 });
