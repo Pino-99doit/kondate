@@ -140,13 +140,13 @@ const INGREDIENTS = [
   {id:'salmon', name:'塩鮭', cat:'protein', unit:'切', size:2, price:400, g:80, n:[183,22.4,8,0.1,0,1.8]},
   {id:'saba', name:'塩さば', cat:'protein', unit:'切', size:2, price:360, g:90, n:[290,20,22,0.1,0,1.8]},
   {id:'tuna', name:'ツナ缶', cat:'protein', unit:'缶', size:3, price:330, g:70, n:[267,17.7,21.7,0.1,0,0.9]},
-  {id:'tofu', name:'豆腐', cat:'protein', unit:'丁', size:3, price:120, g:300, n:[73,7,4.9,1.5,1.1,0]},
+  {id:'tofu', name:'豆腐', cat:'protein', unit:'丁', size:1, price:40, g:300, n:[73,7,4.9,1.5,1.1,0]},
   {id:'natto', name:'納豆', cat:'protein', unit:'パック', size:3, price:100, g:45, n:[190,16.5,10,12.1,6.7,0.8]},
   // 野菜
   {id:'onion', name:'玉ねぎ', cat:'veg', unit:'個', size:3, price:250, g:200, n:[33,1,0.1,8.4,1.5,0], veg:true},
   {id:'carrot', name:'にんじん', cat:'veg', unit:'本', size:3, price:200, g:150, n:[30,0.7,0.2,9.1,2.8,0.1], veg:true},
   {id:'potato', name:'じゃがいも', cat:'veg', unit:'個', size:4, price:300, g:120, n:[76,1.6,0.1,17.6,1.2,0]},
-  {id:'cabbage', name:'キャベツ', cat:'veg', unit:'玉', size:1, price:250, g:1000, n:[23,1.3,0.2,5.2,1.8,0], veg:true},
+  {id:'cabbage', name:'キャベツ', cat:'veg', unit:'玉', size:0.5, price:125, g:1000, n:[23,1.3,0.2,5.2,1.8,0], veg:true},
   {id:'moyashi', name:'もやし', cat:'veg', unit:'袋', size:1, price:40, g:200, n:[15,1.7,0.1,2.6,1.3,0], veg:true},
   {id:'spinach', name:'ほうれん草', cat:'veg', unit:'袋', size:1, price:200, g:200, n:[20,2.2,0.4,3.1,2.8,0], veg:true},
   {id:'komatsu', name:'小松菜', cat:'veg', unit:'袋', size:1, price:150, g:250, n:[13,1.5,0.2,2.4,1.9,0], veg:true},
@@ -155,13 +155,13 @@ const INGREDIENTS = [
   {id:'piman', name:'ピーマン', cat:'veg', unit:'個', size:4, price:180, g:35, n:[22,0.9,0.2,5.1,2.3,0], veg:true},
   {id:'negi', name:'長ねぎ', cat:'veg', unit:'本', size:3, price:200, g:100, n:[35,1.4,0.1,8.3,2.5,0], veg:true},
   {id:'shimeji', name:'しめじ', cat:'veg', unit:'袋', size:1, price:130, g:100, n:[18,2.7,0.5,5,3.7,0], veg:true},
-  {id:'daikon', name:'大根', cat:'veg', unit:'本', size:1, price:200, g:1000, n:[18,0.5,0.1,4.1,1.4,0], veg:true},
+  {id:'daikon', name:'大根', cat:'veg', unit:'本', size:0.5, price:100, g:1000, n:[18,0.5,0.1,4.1,1.4,0], veg:true},
   {id:'mixveg', name:'冷凍ミックスベジ', cat:'veg', unit:'g', size:300, price:200, g:1, n:[70,3,0.5,13,4,0], veg:true},
   // 乳/果物
   {id:'milk', name:'牛乳', cat:'dairy', unit:'ml', size:1000, price:230, g:1, n:[61,3.3,3.8,4.8,0,0.1]},
   {id:'yogurt', name:'ヨーグルト', cat:'dairy', unit:'g', size:400, price:160, g:1, n:[62,3.6,3,4.9,0,0.1]},
   {id:'cheese', name:'スライスチーズ', cat:'dairy', unit:'枚', size:7, price:250, g:18, n:[313,22.7,26,1.3,0,2.8]},
-  {id:'banana', name:'バナナ', cat:'fruit', unit:'本', size:5, price:200, g:100, n:[86,1.1,0.2,22.5,1.1,0]},
+  {id:'banana', name:'バナナ', cat:'fruit', unit:'本', size:1, price:40, g:100, n:[86,1.1,0.2,22.5,1.1,0]},
   // 調味料/常備
   {id:'miso', name:'味噌', cat:'season', unit:'g', size:750, price:400, g:1, n:[182,11,6,22,4.9,12.4]},
   {id:'soy', name:'醤油', cat:'season', unit:'ml', size:1000, price:300, g:1, n:[71,7.7,0,10.1,0,14.5]},
@@ -218,126 +218,126 @@ const RECIPES = [
   // ---- 朝（12種）----
   {id:'B1', type:'breakfast', name:'卵かけご飯とほうれん草の味噌汁', time:9, cuisine:'和', main:'卵', comp:['P','C','V'],
    use:{rice:65,egg:1,miso:16,wakame:1,dashi:1,soy:3,spinach:0.2},
-   steps:['ご飯を温める','卵を割り入れ醤油をかける','だし・味噌・わかめ・ほうれん草で味噌汁']},
+   steps:['鍋に水200mlとだし、3cm幅に切ったほうれん草を入れ中火で1〜2分煮る','弱火にして味噌大さじ1を溶き、乾燥わかめを加えひと煮立ちで火を止める','温かいご飯に卵を割り入れ、醤油小さじ½をかけて混ぜる']},
   {id:'B2', type:'breakfast', name:'納豆ご飯とわかめ味噌汁', time:8, cuisine:'和', main:'納豆', comp:['P','C','V'],
    use:{rice:65,natto:1,miso:16,dashi:1,negi:0.2,wakame:1},
-   steps:['ご飯を温める','納豆を混ぜてのせ、ねぎを散らす','わかめの味噌汁を作る']},
+   steps:['鍋に水200mlとだし、乾燥わかめを入れ中火で2分煮る','弱火で味噌大さじ1を溶き、小口切りの長ねぎを散らす','納豆をよく混ぜて温かいご飯にのせる']},
   {id:'B3', type:'breakfast', name:'目玉焼きトーストとヨーグルト', time:10, cuisine:'洋', main:'卵', comp:['P','C','D','V'],
    use:{bread:1,egg:1,oil:3,yogurt:100,cheese:1,minitomato:0.25},
-   steps:['パンを焼きチーズをのせる','目玉焼きを焼いて添える','ヨーグルトとミニトマトを添える']},
+   steps:['フライパンに油小さじ1を中火で熱し、卵を割り入れる。水小さじ1を加え蓋をして2〜3分、好みの固さに焼く','食パンをトースターで2〜3分焼き、スライスチーズをのせて余熱で溶かす','目玉焼きをのせ、半分に切ったミニトマトとヨーグルトを添える']},
   {id:'B4', type:'breakfast', name:'オートミール・バナナ・牛乳', time:5, cuisine:'洋', main:'オートミール', comp:['C','D','F'],
    use:{oats:40,banana:1,milk:150},
-   steps:['オートミールに牛乳を注ぐ','レンジで1分半','バナナをのせる']},
+   steps:['耐熱ボウルにオートミール40gと牛乳150mlを入れる','ラップなしで電子レンジ600Wで1分半加熱する（吹きこぼれ注意）','輪切りにしたバナナをのせる']},
   {id:'B5', type:'breakfast', name:'ツナマヨトーストとミニトマト', time:8, cuisine:'洋', main:'ツナ', comp:['P','C','D','V'],
    use:{bread:1,tuna:0.34,mayo:12,cheese:1,milk:150,minitomato:0.25},
-   steps:['ツナとマヨを混ぜパンにのせチーズで焼く','ミニトマトを添える','牛乳を添える']},
+   steps:['油を切ったツナにマヨネーズ大さじ1を混ぜる','食パンにのせ、スライスチーズを重ねてトースターで3〜4分こんがり焼く','半分に切ったミニトマトと牛乳を添える']},
   {id:'B6', type:'breakfast', name:'鮭おにぎりと小松菜の味噌汁', time:11, cuisine:'和', main:'鮭', comp:['P','C','V'],
    use:{rice:100,salmon:0.5,nori:1,miso:16,wakame:1,dashi:1,komatsu:0.2},
-   steps:['鮭を焼いてほぐしご飯に混ぜ握る','海苔を巻く','小松菜とわかめの味噌汁']},
+   steps:['塩鮭をグリルで6〜7分焼き、皮と骨を除いてほぐす','鍋に水200mlとだし、3cm幅の小松菜とわかめを入れ中火で2分煮て、弱火で味噌大さじ1を溶く','温かいご飯に鮭を混ぜて握り、海苔を巻く']},
   {id:'B7', type:'breakfast', name:'チーズトーストとトマトサラダ', time:8, cuisine:'洋', main:'チーズ', comp:['C','D','V'],
    use:{bread:1,cheese:2,minitomato:0.4,milk:150},
-   steps:['パンにチーズをのせて焼く','ミニトマトでサラダ','牛乳を添える']},
+   steps:['食パンにスライスチーズ2枚をのせ、トースターで3〜4分、縁が色づくまで焼く','ミニトマトを半分に切って器に盛る','牛乳を添える']},
   {id:'B8', type:'breakfast', name:'小松菜と卵の炒めご飯', time:12, cuisine:'和', main:'卵', comp:['P','V','C'],
    use:{rice:90,egg:1,komatsu:0.5,oil:3,soy:5},
-   steps:['小松菜を炒める','卵を加えて炒め醤油で味付け','ご飯にのせる']},
+   steps:['小松菜を3cm幅に切る。フライパンに油小さじ1を中火で熱し、小松菜を1〜2分炒める','溶き卵を回し入れ、半熟になるまで炒めて醤油小さじ1で味付け','温かいご飯にのせる']},
   {id:'B9', type:'breakfast', name:'きのこ味噌汁と納豆ご飯', time:10, cuisine:'和', main:'きのこ', comp:['P','V','C'],
    use:{rice:90,natto:1,shimeji:0.4,miso:16,dashi:1,wakame:1,negi:0.2},
-   steps:['しめじとわかめを煮て味噌汁にする','ご飯に納豆をのせる']},
+   steps:['しめじは石づきを取ってほぐす。鍋に水200mlとだし、しめじ、わかめを入れ中火で3分煮る','弱火で味噌大さじ1を溶き、小口切りの長ねぎを散らす','納豆を混ぜて温かいご飯にのせる']},
   {id:'B10', type:'breakfast', name:'フレンチトーストとフルーツ・トマト', time:12, cuisine:'洋', main:'卵', comp:['C','D','F','V'],
    use:{bread:2,egg:1,milk:80,sugar:8,banana:1,minitomato:0.25},
-   steps:['卵・牛乳・砂糖を混ぜパンを浸す','両面を焼く','バナナとミニトマトを添える']},
+   steps:['バットで卵・牛乳80ml・砂糖小さじ2を混ぜ、食パン2枚を両面5分ずつ浸す','フライパンを弱めの中火で熱し（油少々）、両面を3〜4分ずつこんがり焼く','輪切りバナナと半分に切ったミニトマトを添える']},
   {id:'B11', type:'breakfast', name:'野菜入り卵雑炊', time:12, cuisine:'和', main:'卵', comp:['P','C','V'],
    use:{rice:80,egg:1,negi:0.3,dashi:2,soy:5,komatsu:0.2,carrot:0.1},
-   steps:['だし汁でご飯・にんじん・小松菜を煮る','溶き卵を回し入れる','ねぎを散らす']},
+   steps:['にんじんは薄いいちょう切り、小松菜は3cm幅、長ねぎは小口切りにする','鍋に水300mlとだし、にんじん・小松菜を入れ中火で3分煮て、ご飯と醤油小さじ1を加える','溶き卵を回し入れ、ふんわり固まったら火を止め、ねぎを散らす']},
   {id:'B12', type:'breakfast', name:'ヨーグルト・ゆで卵・トースト', time:10, cuisine:'洋', main:'卵', comp:['P','C','D','V'],
    use:{bread:1,egg:1,yogurt:100,banana:1,minitomato:0.25},
-   steps:['卵をゆでる','パンを焼く','ヨーグルト・バナナ・ミニトマトを添える']},
+   steps:['卵を沸騰した湯から中火で9分ゆで、冷水にとって殻をむく','食パンをトースターで2〜3分焼く','ゆで卵・ヨーグルト・輪切りバナナ・半分に切ったミニトマトを盛る']},
 
   // ---- 夜（16種）----
   {id:'D1', type:'dinner', name:'鶏むね照り焼きと温野菜', time:18, cuisine:'和', main:'鶏', comp:['P','C','V'],
    use:{chicken_b:150,soy:13,sugar:7,oil:4,rice:100,cabbage:0.12,broccoli:0.25},
-   steps:['鶏むねを削ぎ切りに','焼いて醤油・砂糖で照り焼き','キャベツとブロッコリーを温野菜にしてご飯に']},
+   steps:['鶏むねは皮を除き、繊維を断つよう1cm厚のそぎ切りにする。キャベツはざく切り、ブロッコリーは小房に分ける','耐熱皿に野菜を入れラップし、電子レンジ600Wで2〜3分加熱する（温野菜）','フライパンに油小さじ1を中火で熱し鶏を両面3分ずつ焼く。醤油大さじ1・砂糖小さじ2を絡めて照りを出し、ご飯と温野菜を添える']},
   {id:'D2', type:'dinner', name:'豚こま生姜焼き', time:15, cuisine:'和', main:'豚', comp:['P','V','C'],
    use:{pork_k:100,onion:0.5,ginger:5,soy:13,sugar:5,cabbage:0.15,rice:100,oil:4},
-   steps:['玉ねぎと豚を炒める','生姜・醤油・砂糖で味付け','千切りキャベツとご飯を添える']},
+   steps:['玉ねぎは薄切り、キャベツは千切り、生姜はすりおろす','フライパンに油小さじ1を中火で熱し、豚こまと玉ねぎを3〜4分炒める','醤油大さじ1・砂糖小さじ1・生姜を加え、汁気が絡むまで1分炒める。千切りキャベツとご飯を添える']},
   {id:'D3', type:'dinner', name:'鮭の塩焼きとほうれん草', time:18, cuisine:'和', main:'鮭', comp:['P','V','C'],
    use:{salmon:1,spinach:0.5,soy:4,miso:16,dashi:1,rice:100,daikon:0.1},
-   steps:['鮭を焼く','ほうれん草のおひたし・大根おろし','味噌汁とご飯を添える']},
+   steps:['塩鮭をグリルで片面5分ずつ焼く','ほうれん草を熱湯で1分ゆで、冷水にとって絞り3cm幅に切り、醤油小さじ1をかける（おひたし）','大根をすりおろして添え、だしと味噌大さじ1の味噌汁・ご飯を出す']},
   {id:'D4', type:'dinner', name:'麻婆豆腐（もやし入り）', time:16, cuisine:'中', main:'豆腐', comp:['P','C','V'],
    use:{tofu:1,mince:70,negi:0.4,gara:3,soy:8,sesoil:4,rice:100,moyashi:0.5,shimeji:0.3},
-   steps:['ひき肉ともやし・しめじを炒める','水・鶏ガラ・醤油と豆腐を煮る','ねぎとごま油で仕上げご飯に']},
+   steps:['豆腐は2cm角に切る。長ねぎはみじん切り、しめじはほぐす','フライパンにごま油小さじ1を中火で熱し、ひき肉・もやし・しめじを3分炒める','水150ml・鶏ガラ小さじ½・醤油大さじ½を加え、豆腐を入れ3分煮る。ねぎを散らし、好みで水溶き片栗でとろみをつけご飯に']},
   {id:'D5', type:'dinner', name:'親子丼ときのこ・青菜', time:16, cuisine:'和', main:'鶏', comp:['P','C','V'],
    use:{chicken_t:100,egg:2,onion:0.5,mentsuyu:32,rice:110,shimeji:0.4,spinach:0.3},
-   steps:['玉ねぎ・鶏・しめじをめんつゆで煮る','溶き卵を回し入れご飯に','ほうれん草のおひたしを添える']},
+   steps:['鶏ももは一口大、玉ねぎは薄切り、しめじはほぐす','小鍋にめんつゆ大さじ2と水大さじ2、玉ねぎ・しめじ・鶏を入れ中火で5分煮る','溶き卵2個を2回に分けて回し入れ、半熟で火を止める。ご飯にのせ、ゆでたほうれん草を添える']},
   {id:'D6', type:'dinner', name:'ツナナポリタン', time:15, cuisine:'洋', main:'ツナ', comp:['C','V','P'],
    use:{pasta:90,tuna:0.34,piman:1,onion:0.5,ketchup:35,oil:4,minitomato:0.2},
-   steps:['パスタをゆでる','具を炒めケチャップで味付け','パスタを和えミニトマトを添える']},
+   steps:['パスタを袋の表示どおり塩ゆでする。ピーマン・玉ねぎは薄切り','フライパンに油小さじ1を中火で熱し、玉ねぎ・ピーマン・ツナを2分炒める','ケチャップ大さじ2を加え軽く炒めてからパスタを和え、ミニトマトを添える']},
   {id:'D7', type:'dinner', name:'野菜カレーライス', time:20, cuisine:'洋', main:'豚', comp:['P','V','C'],
    use:{pork_k:90,onion:0.8,carrot:0.5,potato:1,curry:0.35,rice:100},
-   steps:['玉ねぎ・にんじん・じゃがいもと豚を炒める','水を加えて煮る','ルーを溶かしご飯に']},
+   steps:['玉ねぎ・にんじん・じゃがいもは一口大に切る','鍋に油少々で豚と野菜を3分炒め、水250mlを加え中火で10分煮る','火を止めてルウを溶かし、弱火で3分煮る。ご飯にかける']},
   {id:'D8', type:'dinner', name:'塩さば焼きと大根おろし', time:15, cuisine:'和', main:'さば', comp:['P','V','C'],
    use:{saba:1,daikon:0.25,soy:4,miso:16,dashi:1,rice:100},
-   steps:['さばを焼く','大根をたっぷりおろす','味噌汁とご飯を添える']},
+   steps:['塩さばをグリルで皮目から7〜8分焼く','大根をおろし、軽く水気を切って醤油小さじ1をたらす','だしと味噌大さじ1の味噌汁・ご飯を添える']},
   {id:'D9', type:'dinner', name:'豚バラもやし炒め', time:12, cuisine:'中', main:'豚', comp:['P','V','C'],
    use:{pork_b:80,moyashi:1,ponzu:18,sesoil:4,rice:100,carrot:0.2},
-   steps:['豚バラを炒める','もやし・にんじんを加えて炒める','ポン酢で味付けご飯に']},
+   steps:['にんじんは細切り、豚バラは食べやすく切る','フライパンにごま油小さじ1を中火で熱し豚バラを2分炒め、にんじん・もやしを加え強火で2分炒める','ポン酢大さじ1で味付けし、ご飯を添える']},
   {id:'D10', type:'dinner', name:'オムライス（野菜入り）', time:18, cuisine:'洋', main:'卵', comp:['P','C','V'],
    use:{rice:110,egg:2,tuna:0.34,onion:0.5,ketchup:32,oil:4,mixveg:60,piman:1},
-   steps:['玉ねぎ・ピーマン・ミックスベジ・ツナとご飯を炒めケチャップ','薄焼き卵を作る','ご飯を包む']},
+   steps:['玉ねぎ・ピーマンはみじん切り。フライパンに油小さじ1で玉ねぎ・ピーマン・ミックスベジ・ツナを2分炒める','ご飯とケチャップ大さじ2を加え炒めてチキンライスにし、皿に取る','溶き卵2個で薄焼き卵を作り、ご飯にのせて包む']},
   {id:'D11', type:'dinner', name:'鶏むねとブロッコリー炒め', time:15, cuisine:'中', main:'鶏', comp:['P','V','C'],
    use:{chicken_b:150,broccoli:0.5,garlic:4,soy:9,oil:4,rice:100,carrot:0.2},
-   steps:['ブロッコリーを下ゆで','鶏・にんじん・にんにくを炒める','醤油で味付けご飯に']},
+   steps:['ブロッコリーは小房、にんじんは薄切り、鶏むねは一口大のそぎ切り、にんにくはみじん切り','ブロッコリーを熱湯で1分下ゆでする','フライパンに油小さじ1とにんにくを熱し鶏を3分炒め、にんじん・ブロッコリーを加え醤油大さじ½で2分炒める。ご飯に']},
   {id:'D12', type:'dinner', name:'たっぷり野菜の焼きうどん', time:14, cuisine:'和', main:'豚', comp:['C','P','V'],
    use:{udon:1,pork_k:70,cabbage:0.12,carrot:0.3,mentsuyu:25,oil:4,moyashi:0.5},
-   steps:['豚とキャベツ・にんじん・もやしを炒める','うどんを加える','めんつゆで味付け']},
+   steps:['キャベツはざく切り、にんじんは短冊切り、豚こまは一口大に切る','フライパンに油小さじ1を中火で熱し豚を炒め、にんじん・キャベツ・もやしを加え2分炒める','ほぐしたゆでうどんを加え、めんつゆ大さじ1で炒め合わせる']},
   {id:'D13', type:'dinner', name:'ツナと卵の野菜チャーハン', time:13, cuisine:'中', main:'卵', comp:['P','C','V'],
    use:{rice:130,egg:1,tuna:0.5,negi:0.3,gara:3,sesoil:4,mixveg:60,carrot:0.2},
-   steps:['卵とご飯を炒める','ツナ・ねぎ・ミックスベジ・にんじんを加える','鶏ガラで味付け']},
+   steps:['にんじん・長ねぎはみじん切り。フライパンにごま油小さじ1を強火で熱し、溶き卵とご飯を入れ手早く炒める','ツナ・ねぎ・ミックスベジ・にんじんを加え2分炒める','鶏ガラ小さじ½で味付けし、強火で炒めてパラッとさせる']},
   {id:'D14', type:'dinner', name:'ハンバーグと温野菜', time:20, cuisine:'洋', main:'ひき肉', comp:['P','V','C'],
    use:{mince:140,onion:0.5,egg:0.5,ketchup:20,mixveg:50,rice:90,oil:4,broccoli:0.2},
-   steps:['ひき肉と玉ねぎ・卵を混ぜ成形','焼く','ブロッコリーと付け合わせ・ご飯を添える']},
+   steps:['玉ねぎをみじん切りにし、ひき肉・溶き卵半量・塩こしょう少々と練り、小判形に成形して中央を少しくぼませる','フライパンに油小さじ1を中火で熱し片面3分焼き、裏返して蓋をし弱火で6〜7分蒸し焼きにする','ブロッコリーとミックスベジを電子レンジで2分加熱（温野菜）。ケチャップを添え、ご飯と盛る']},
   {id:'D15', type:'dinner', name:'肉豆腐ときのこ・青菜', time:16, cuisine:'和', main:'豚', comp:['P','C','V'],
    use:{tofu:1,pork_k:90,negi:0.4,mentsuyu:32,sugar:4,rice:100,komatsu:0.3,shimeji:0.3,carrot:0.15},
-   steps:['豚を炒める','豆腐・小松菜・しめじ・にんじんをめんつゆで煮る','ご飯を添える']},
+   steps:['豆腐は8等分、にんじんは薄切り、小松菜は3cm幅、長ねぎは斜め切り、しめじはほぐす','鍋にめんつゆ大さじ2・水100ml・砂糖小さじ1を煮立て、豚こま・にんじん・しめじを3分煮る','豆腐と小松菜・ねぎを加え、さらに4分煮る。ご飯を添える']},
   {id:'D16', type:'dinner', name:'鶏もも唐揚げ風とキャベツ', time:20, cuisine:'和', main:'鶏', comp:['P','V','C'],
    use:{chicken_t:170,garlic:4,ginger:4,soy:12,oil:10,cabbage:0.15,rice:100,minitomato:0.25},
-   steps:['鶏に下味をつけ片栗(代用)で揚げ焼き','キャベツを千切りにしトマトを添える','ご飯を添える']},
+   steps:['鶏ももを一口大に切り、醤油大さじ1・おろしにんにく・生姜で5分下味をつけ、片栗粉（または小麦粉）をまぶす','フライパンに油大さじ2を中火で熱し、皮目から両面3〜4分ずつ揚げ焼きにして火を通す','千切りキャベツとミニトマトを添え、ご飯と盛る']},
   {id:'D17', type:'dinner', name:'回鍋肉風（鶏ももとキャベツ）', time:16, cuisine:'中', main:'鶏', comp:['P','V','C'],
    use:{chicken_t:140,cabbage:0.2,piman:1,miso:14,sugar:4,sesoil:4,rice:100},
-   steps:['鶏ももとキャベツ・ピーマンを炒める','味噌・砂糖で味付け','ご飯を添える']},
+   steps:['キャベツはざく切り、ピーマンは乱切り、鶏ももは一口大に切る','フライパンにごま油小さじ1を中火で熱し鶏を3分炒め、キャベツ・ピーマンを加え強火で2分炒める','味噌大さじ1・砂糖小さじ1を水大さじ1で溶いて加え、全体に絡める。ご飯に']},
   {id:'D18', type:'dinner', name:'豆腐ハンバーグと温野菜', time:20, cuisine:'洋', main:'豆腐', comp:['P','V','C'],
    use:{tofu:0.7,mince:80,onion:0.5,egg:0.5,mixveg:40,broccoli:0.2,soy:8,sugar:4,rice:90,oil:4},
-   steps:['豆腐とひき肉・玉ねぎ・卵を混ぜ成形','焼いて醤油・砂糖で味付け','ブロッコリーと付け合わせ・ご飯']},
+   steps:['豆腐は軽く水切り。玉ねぎはみじん切り。ひき肉・豆腐・溶き卵半量・塩少々を練って成形する','フライパンに油小さじ1で片面3分焼き、裏返して蓋をし弱火で6分蒸し焼きにする','醤油大さじ½・砂糖小さじ1を煮絡める。レンジ加熱したブロッコリー・ミックスベジとご飯を添える']},
   {id:'D19', type:'dinner', name:'さばの味噌煮', time:18, cuisine:'和', main:'さば', comp:['P','V','C'],
    use:{saba:1,negi:0.3,ginger:4,miso:16,sugar:6,daikon:0.15,rice:100},
-   steps:['さばを生姜・味噌・砂糖で煮る','大根とねぎを添える','ご飯を添える']},
+   steps:['さばは皮に切り込みを入れ、生姜は薄切り、長ねぎは斜め切り、大根は1cm厚の半月切りにする','鍋に水100ml・味噌大さじ1・砂糖小さじ2・生姜を煮立て、さばと大根を入れ落し蓋で中火8分煮る','ねぎを加えひと煮立ちさせる。ご飯を添える']},
   {id:'D20', type:'dinner', name:'鶏むねのトマト煮込み', time:20, cuisine:'洋', main:'鶏', comp:['P','V','C'],
    use:{chicken_b:150,onion:0.5,minitomato:0.5,piman:1,garlic:4,oil:4,rice:100},
-   steps:['鶏むねと玉ねぎ・ピーマンを炒める','トマトとにんにくで煮込む','ご飯を添える']},
+   steps:['鶏むねは一口大、玉ねぎは薄切り、ピーマンは乱切り、にんにくはみじん切り、ミニトマトは半分に切る','フライパンに油小さじ1とにんにくを熱し鶏を3分炒め、玉ねぎ・ピーマンを加え2分炒める','ミニトマトと水50mlを加え中火で7〜8分煮詰め、塩こしょうで調える。ご飯に']},
   {id:'D21', type:'dinner', name:'野菜たっぷり玉子炒め', time:13, cuisine:'中', main:'卵', comp:['P','V','C'],
    use:{egg:2,cabbage:0.12,carrot:0.3,moyashi:0.5,gara:3,sesoil:4,soy:5,rice:100},
-   steps:['キャベツ・にんじん・もやしを炒める','溶き卵を加えて炒める','鶏ガラ・醤油で味付けご飯に']},
+   steps:['キャベツはざく切り、にんじんは短冊切り。フライパンにごま油小さじ1を中火で熱し、にんじん・キャベツ・もやしを2分炒める','溶き卵2個を回し入れ、大きく混ぜて半熟にする','鶏ガラ小さじ½・醤油小さじ1で味付けし、ご飯を添える']},
   {id:'D22', type:'dinner', name:'ねばねば納豆丼', time:10, cuisine:'和', main:'納豆', comp:['P','V','C'],
    use:{natto:1,egg:1,moyashi:0.5,komatsu:0.4,nori:1,soy:6,rice:120},
-   steps:['もやしと小松菜をさっと茹でる','ご飯に納豆・卵・もやし・小松菜をのせる','海苔と醤油で仕上げ']},
+   steps:['もやしと3cm幅の小松菜を熱湯で1分ゆで、水気を絞る','納豆をよく混ぜる','ご飯に納豆・卵・ゆで野菜をのせ、ちぎった海苔と醤油小さじ1をかける']},
   {id:'D23', type:'dinner', name:'豚バラ大根', time:20, cuisine:'和', main:'豚', comp:['P','V','C'],
    use:{pork_b:80,daikon:0.3,negi:0.3,soy:10,sugar:5,mentsuyu:10,rice:100},
-   steps:['豚バラと大根を炒める','水・醤油・砂糖・めんつゆで煮る','ねぎを散らしご飯に']},
+   steps:['大根は1.5cm厚の半月切り、豚バラは食べやすく切る','鍋に油少々で豚を炒め、大根・水150ml・醤油大さじ½・砂糖小さじ1・めんつゆ小さじ2を加える','落し蓋で中火12分、大根が柔らかくなるまで煮て、斜め切りのねぎを散らす。ご飯に']},
   {id:'D24', type:'dinner', name:'豆腐チャンプルー', time:15, cuisine:'中', main:'ツナ', comp:['P','V','C'],
    use:{tofu:0.7,tuna:0.5,moyashi:1,carrot:0.2,egg:1,soy:8,sesoil:4,rice:100},
-   steps:['豆腐ともやし・にんじんを炒める','ツナと溶き卵を加える','醤油で味付けご飯に']},
+   steps:['豆腐は水切りして一口大に手でちぎる。にんじんは短冊切り','フライパンにごま油小さじ1を強火で熱し、豆腐を焼き色がつくまで2分焼く','にんじん・もやし・ツナを加え2分炒め、溶き卵を回し入れ、醤油大さじ½で味付け。ご飯に']},
   {id:'B13', type:'breakfast', name:'ツナと野菜のスクランブルトースト', time:9, cuisine:'洋', main:'卵', comp:['P','C','V','D'],
    use:{bread:1,egg:1,tuna:0.3,minitomato:0.25,oil:3,milk:100},
-   steps:['卵とツナをスクランブルにする','トーストにのせる','ミニトマトと牛乳を添える']},
+   steps:['ボウルに卵と油を切ったツナを入れ溶きほぐす','フライパンに油小さじ1を中火で熱し、卵液を入れ大きく混ぜて半熟のスクランブルにする','トーストした食パンにのせ、ミニトマトと牛乳を添える']},
   {id:'B14', type:'breakfast', name:'具だくさん豚汁とご飯', time:14, cuisine:'和', main:'豚', comp:['P','V','C'],
    use:{rice:90,pork_k:40,daikon:0.15,carrot:0.2,negi:0.2,miso:16,dashi:1},
-   steps:['豚と大根・にんじんを煮る','味噌を溶いて豚汁にする','ご飯を添える']},
+   steps:['大根・にんじんは薄いいちょう切り、豚こまは一口大に切る','鍋に油少々で豚を炒め、色が変わったら大根・にんじんと水300ml・だしを加え中火で8分煮る','弱火で味噌大さじ1を溶き、小口ねぎを散らす。ご飯を添える']},
   {id:'B15', type:'breakfast', name:'野菜スープごはん', time:10, cuisine:'洋', main:'卵', comp:['P','V','C'],
    use:{rice:80,mixveg:60,cabbage:0.1,gara:3,egg:1},
-   steps:['冷凍ミックスベジとキャベツを鶏ガラスープで煮る','溶き卵を回し入れる','ご飯を加える']},
+   steps:['キャベツをざく切りにする。鍋に水250ml・鶏ガラ小さじ½・冷凍ミックスベジ・キャベツを入れ中火で4分煮る','溶き卵を回し入れ、ふんわり浮いたらご飯を加えてひと煮立ち','器に盛る']},
   {id:'B16', type:'breakfast', name:'焼き鮭と青菜のっけご飯', time:11, cuisine:'和', main:'鮭', comp:['P','V','C'],
    use:{rice:100,salmon:0.5,komatsu:0.4,nori:1,soy:4},
-   steps:['鮭を焼いてほぐす','小松菜を茹でる','ご飯にのせ海苔と醤油で仕上げ']}
+   steps:['塩鮭をグリルで6〜7分焼いてほぐす','小松菜を3cm幅に切り、熱湯で1分ゆでて水気を絞る','ご飯に鮭と小松菜をのせ、ちぎった海苔と醤油小さじ1をかける']}
 ];
 
 const byId = arr => arr.reduce((m,x)=>(m[x.id]=x,m),{});
@@ -563,6 +563,43 @@ function recipeThaw(recipeId, ingMap){
   return out;
 }
 
+/* 食材の在庫区分: 'stock'=常備(常温・調味料・缶・冷凍ストック。毎週は買わず在庫確認)
+   'fresh'=使い切り(生鮮。その週で使い切る前提) */
+const STOCK_IDS = new Set(['rice','bread','pasta','oats','tuna','mixveg']);
+function ingClass(ing){
+  if(!ing) return 'fresh';
+  if(ing.cat==='season') return 'stock';
+  if(STOCK_IDS.has(ing.id)) return 'stock';
+  return 'fresh';
+}
+
+/* ---- 人が分かる単位への変換（調理表示用） ----
+   recipeの use[id]（＝その食材のunit基準の数量 q）を、買い物・調理で読みやすい文字列にする。
+   個数もの→個/本/丁/枚など（½・⅓等の分数）／調味料→小さじ・大さじ／その他→g。 */
+const FRACTIONS = [[1,'1'],[0.75,'¾'],[0.6667,'⅔'],[0.5,'½'],[0.3333,'⅓'],[0.25,'¼']];
+const PIECE_UNITS = ['個','本','丁','枚','玉','缶','パック','袋','切'];
+function fmtPiece(q, unit, g){
+  if(Math.abs(q-Math.round(q))<1e-9) return Math.round(q)+unit;       // 整数 → そのまま
+  const whole=Math.floor(q), frac=q-whole;
+  for(const [v,s] of FRACTIONS){ if(Math.abs(frac-v)<0.06) return (whole?whole:'')+s+unit; }
+  if(g) return '約'+Math.round(q*g)+'g';                              // 端数は重量で
+  return Math.round(q*100)/100+unit;
+}
+function fmtSpoon(v){                                                  // v: g または ml
+  if(v<1) return '少々';
+  if(v>=15){ const t=Math.round(v/15*2)/2; return t? '大さじ'+t : '少々'; }
+  const t=Math.round(v/5*2)/2; return t? '小さじ'+t : '少々';
+}
+function fmtCook(ing, q){
+  if(!ing) return q+'';
+  if(ing.id==='garlic') return Math.max(1,Math.round(q/5))+'片';
+  if(ing.id==='ginger') return Math.max(1,Math.round(q/5))+'かけ';
+  if(ing.id==='pepper') return '少々';
+  if(PIECE_UNITS.includes(ing.unit)) return fmtPiece(q, ing.unit, ing.g);
+  if(ing.cat==='season' && (ing.unit==='g'||ing.unit==='ml')) return fmtSpoon(q);
+  return Math.round(q*(ing.g||1))+'g';                                // 肉・魚・米・乳など
+}
+
 /* 価格更新: 最新値を currentPrice として履歴に追加（同日なら上書き） */
 function applyPriceUpdate(ing, newPrice, dateStr, source){
   if(!ing.history) ing.history=[];
@@ -625,7 +662,7 @@ function learnKeyFromLine(line){
 const api = {INGREDIENTS,RECIPES,ING,REC,BREAKFASTS,DINNERS,TARGET,
   consumedCost,recipeNutrition,dayNutrition,evalNutrient,dayStatus,dayPenalty,
   dayComponents,dayBalanced,generatePlan,weeklyConsumedCost,weeklyPenalty,weeklyNutrition,
-  monthlyProjection,chooseBestPlan,buildShoppingList,groupByStorage,recipeThaw,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,ALIASES,STORAGE};
+  monthlyProjection,chooseBestPlan,buildShoppingList,groupByStorage,recipeThaw,ingClass,fmtCook,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,ALIASES,STORAGE};
 if(typeof module!=='undefined' && module.exports){ module.exports=api; }
 root.Core = api;
 })(typeof window!=='undefined'?window:globalThis);
@@ -677,15 +714,16 @@ root.Core = api;
     <div class="card">
       <div class="row between">
         <div>
-          <div class="muted">週1回の買い物 合計</div>
+          <div class="muted">今週の使い切り買い物 合計</div>
           <div class="big" id="shopTotal">¥0</div>
         </div>
         <div style="text-align:right">
           <button class="ghost sm" id="btnCopy">コピー</button>
+          <button class="ghost sm" id="btnClearChk" style="margin-top:6px">チェック全解除</button>
         </div>
       </div>
-      <label class="tg" style="margin-top:8px"><input type="checkbox" id="incSeason" class="chk" checked> 調味料・常備品も含める</label>
-      <div class="legend">チェックを外すと、家にある調味料を除いた“今週ならではの買い物”だけになります。</div>
+      <label class="tg" style="margin-top:8px"><input type="checkbox" id="incSeason" class="chk" checked> 常備品（米・調味料など）も表示する</label>
+      <div class="legend">合計は「今週使い切る生鮮品」の金額です。米・調味料などの常備品は別枠（在庫を確認、無ければ買う）で、毎週は買いません。</div>
     </div>
     <div id="shopArea"></div>
   </section>
@@ -776,7 +814,7 @@ function freshState(){
     ...x, history:[{date:today,price:x.price,source:'初期推定'}]
   }));
   const plan = C.chooseBestPlan({budget:15000, ingMap:byIdLocal(ingredients), startSeed: (Date.now()>>>0)||1});
-  return {version:1, settings:{people:1,budget:15000}, ingredients, plan, receipts:[], costLog:[], history:[], aliases:{}};
+  return {version:2, settings:{people:1,budget:15000}, ingredients, plan, receipts:[], costLog:[], history:[], aliases:{}, shopChecked:{}};
 }
 function byIdLocal(arr){return arr.reduce((m,x)=>(m[x.id]=x,m),{});}
 function ingMap(){return byIdLocal(state.ingredients);}
@@ -800,6 +838,17 @@ function migrate(s){
   if(!s.history) s.history=[];
   if(!s.aliases) s.aliases={};
   if(!s.receipts) s.receipts=[];
+  if(!s.shopChecked) s.shopChecked={};
+  // v1→v2: 大根・キャベツを「½本/½玉」の半カット売りに変更。
+  // 旧データは1本/1玉ぶんの価格で保存されているので、半カット分(½)に再スケールする（単価＝price/sizeは不変）。
+  if(!s.version || s.version < 2){
+    const rescale={daikon:0.5, cabbage:0.5};
+    s.ingredients.forEach(i=>{ const f=rescale[i.id]; if(f && i.price!=null){
+      i.price=Math.round(i.price*f);
+      if(i.history) i.history.forEach(h=>{ if(h&&h.price!=null) h.price=Math.round(h.price*f); });
+    }});
+    s.version=2;
+  }
   return s;
 }
 function persist(s){ try{ localStorage.setItem(KEY, JSON.stringify(s||state)); }catch(e){ toast('保存容量が一杯です'); } }
@@ -901,12 +950,7 @@ function storeBadge(store){
   const v=map[store]||map['常温'];
   return `<span class="chip ${v[0]}" style="font-size:10.5px">${v[1]}</span>`;
 }
-/* レシピの分量表示（1人分）。重量はそのまま、個数は整数なら個数・端数はグラム換算。 */
-function fmtQty(ing,q){
-  if(ing.unit==='g'||ing.unit==='ml') return Math.round(q)+ing.unit;
-  if(Number.isInteger(q)) return q+ing.unit;
-  return '約'+Math.round(q*(ing.g||1))+'g';
-}
+/* レシピの分量は C.fmtCook（人が分かる単位）で表示する */
 /* 献立カード用: 冷凍肉・魚を使う食事に「要解凍」チップ */
 function thawTag(id,im){ const t=C.recipeThaw(id,im); return t.length?` <span class="chip o" style="font-size:10px">❄要解凍</span>`:''; }
 function openRecipe(id){
@@ -914,7 +958,7 @@ function openRecipe(id){
   const ingHtml=Object.keys(r.use).map(iid=>{
     const ing=im[iid]; const q=r.use[iid];
     return `<div class="ing"><span>${ing.name} ${storeBadge(ing.store)}</span>`+
-      `<span class="muted">${fmtQty(ing,q)} ・約${yen(q/ing.size*ing.price)}</span></div>`;
+      `<span class="muted">${C.fmtCook(ing,q)}</span></div>`;
   }).join('');
   const thaw=C.recipeThaw(id,im);
   const thawHtml = thaw.length
@@ -927,7 +971,6 @@ function openRecipe(id){
       <span class="chip o">${r.time}分</span>
       <span class="chip b">${r.cuisine}</span>
       ${(r.comp||[]).map(c=>`<span class="chip g">${({P:'たんぱく',V:'野菜',C:'主食',D:'乳/卵',F:'果物'})[c]}</span>`).join('')}
-      <span class="chip gray">約${yen(C.consumedCost(id,im))}</span>
     </div>
     <div style="margin-top:12px;font-weight:700;font-size:13px">この一品の栄養（1人分）</div>
     <div class="muted" style="font-size:12.5px;margin-top:2px">${(()=>{const n=C.recipeNutrition(id,im);
@@ -946,72 +989,91 @@ $('#recipeModal').addEventListener('click',e=>{ if(e.target.id==='recipeModal') 
 /* ---------- 作り直す ---------- */
 $('#btnRegen').addEventListener('click',()=>{
   state.plan = C.chooseBestPlan({budget:state.settings.budget, ingMap:ingMap(), startSeed:(Date.now()>>>0)||1, avoid:recentAvoidSet(true)});
+  state.shopChecked={};
   persist(); renderMenu(); toast('別の案に切り替えました');
 });
 
 /* ---------- 買い物リスト ---------- */
 const DOW=['日','月','火','水','木','金','土'];
-/* 週の必要量の表示（重量はg/ml、個数は整数なら個数・端数はグラム換算） */
-function fmtNeed(it){
-  if(it.unit==='g'||it.unit==='ml') return '約'+Math.round(it.grams)+it.unit;
-  if(Number.isInteger(it.need)) return it.need+it.unit;
-  return '約'+Math.round(it.grams)+'g';
+/* 実際の買い物単位（パック/袋/丁/本/½玉…）の表記 */
+const FRAC_DISP=[[0.75,'¾'],[0.6667,'⅔'],[0.5,'½'],[0.3333,'⅓'],[0.25,'¼']];
+function fracUnit(q, unit){
+  const whole=Math.floor(q+1e-9), frac=q-whole;
+  for(const [v,s] of FRAC_DISP){ if(Math.abs(frac-v)<0.04) return (whole?whole:'')+s+unit; }
+  return (Math.round(q*100)/100)+unit;
 }
-function fmtLeftover(it){
-  if(it.unit==='g'||it.unit==='ml') return '約'+Math.round(it.leftoverGrams)+it.unit;
-  if(Number.isInteger(it.need)&&Number.isInteger(it.leftover)) return it.leftover+it.unit;
-  return '約'+Math.round(it.leftoverGrams)+'g';
-}
-/* 各使用回の分量表示 */
-function fmtUse(it,u){
-  if(it.unit==='g'||it.unit==='ml') return Math.round(u.grams)+it.unit;
-  if(Number.isInteger(u.qty)) return u.qty+it.unit;
-  return Math.round(u.grams)+'g';
+function buyText(it){
+  if(it.size<1) return fracUnit(it.packs*it.size, it.unit);   // ½玉 / 1玉 / ½本 など（半カット売り）
+  if(it.size===1) return it.packs+it.unit;                    // 3丁 / 1本 / 2缶 / 1袋
+  return it.packs+'パック('+it.size+it.unit+(it.packs>1?'×'+it.packs:'')+')'; // 1パック(10個) など
 }
 function renderShop(){
-  const inc=$('#incSeason').checked;
-  const {items,total}=C.buildShoppingList(state.plan,{includeSeason:inc, ingMap:ingMap()});
-  $('#shopTotal').textContent=yen(total);
+  const showStock=$('#incSeason').checked;
+  const im=ingMap();
+  const {items}=C.buildShoppingList(state.plan,{includeSeason:true, ingMap:im});
+  const fresh=items.filter(it=>C.ingClass(it)==='fresh');
+  const stock=items.filter(it=>C.ingClass(it)==='stock');
+  const freshTotal=fresh.reduce((s,x)=>s+x.cost,0);
+  $('#shopTotal').textContent=yen(freshTotal);
   const area=$('#shopArea'); area.innerHTML='';
   if(!items.length){ area.innerHTML='<div class="empty">表示する品目がありません。</div>'; return; }
-  const catName={carb:'主食',protein:'肉・魚・たんぱく',veg:'野菜',dairy:'卵・乳製品',fruit:'果物',season:'調味料・常備品'};
-  let curCat=null, table=null;
-  items.forEach(it=>{
-    if(it.cat!==curCat){ curCat=it.cat;
-      const h=document.createElement('div'); h.className='cat'; h.textContent=catName[it.cat]||'その他';
-      const card=document.createElement('div'); card.className='card'; card.style.margin='6px 0';
-      table=document.createElement('table'); table.className='list';
-      card.appendChild(table); area.appendChild(h); area.appendChild(card);
-    }
+
+  const catName={carb:'主食',protein:'肉・魚・たんぱく',veg:'野菜',dairy:'卵・乳製品',fruit:'果物',season:'調味料'};
+  // 1品の行を作る
+  const rowOf=(it)=>{
     const tr=document.createElement('tr');
-    const packDisp = it.packs+'パック'+(it.packs>1?`(${it.size}${it.unit}×${it.packs})`:`(${it.size}${it.unit})`);
-    const leftover = it.leftoverGrams>3 ? `・余り ${fmtLeftover(it)}` : '';
-    // 使う料理の内訳（タップで展開）
     const uses=(it.byRecipe||[]).slice().sort((a,b)=> a.day-b.day || (a.meal<b.meal?1:-1));
     const useRows=uses.map(u=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0">
-        <span class="muted">${DOW[ (u.day+1)%7 ]}曜${u.meal==='breakfast'?'朝':'夜'}・${u.name}</span>
-        <span class="muted" style="white-space:nowrap">${fmtUse(it,u)}</span></div>`).join('');
+        <span class="muted">${DOW[(u.day+1)%7]}曜${u.meal==='breakfast'?'朝':'夜'}・${u.name}</span>
+        <span class="muted" style="white-space:nowrap">${C.fmtCook(im[it.id],u.qty)}</span></div>`).join('');
     const breakdown = uses.length
       ? `<details style="margin-top:4px"><summary>使う料理 ${uses.length}回</summary><div style="padding:4px 0 2px">${useRows}</div></details>`
       : '';
-    tr.innerHTML=`<td style="width:24px;vertical-align:top;padding-top:11px"><input type="checkbox" class="chk"></td>
+    const checked = !!(state.shopChecked && state.shopChecked[it.id]);
+    tr.innerHTML=`<td style="width:24px;vertical-align:top;padding-top:11px"><input type="checkbox" class="chk"${checked?' checked':''}></td>
       <td><div style="font-weight:600">${it.name} ${storeBadge(it.store)}</div>
-        <div class="muted">必要 ${fmtNeed(it)} ・買う ${packDisp}${leftover}</div>
+        <div class="muted">買う ${buyText(it)}</div>
         ${breakdown}</td>
       <td class="r" style="vertical-align:top;padding-top:11px">${yen(it.cost)}</td>`;
+    const applyStyle=(on)=>{ tr.style.opacity=on?.45:1;
+      tr.querySelectorAll('td>div').forEach(d=>d.style.textDecoration=on?'line-through':'none'); };
+    applyStyle(checked);
     tr.querySelector('input.chk').addEventListener('change',e=>{
-      tr.style.opacity=e.target.checked?.45:1;
-      tr.querySelectorAll('td>div').forEach(d=>d.style.textDecoration=e.target.checked?'line-through':'none');
+      const on=e.target.checked; applyStyle(on);
+      state.shopChecked=state.shopChecked||{};
+      if(on) state.shopChecked[it.id]=1; else delete state.shopChecked[it.id];
+      persist();
     });
-    table.appendChild(tr);
-  });
-  renderStorageGuide(area, items);
+    return tr;
+  };
+  // セクション（使い切り/常備）をカテゴリごとに描画
+  const renderSection=(title, sub, list)=>{
+    const sh=document.createElement('div'); sh.className='cat'; sh.style.fontSize='12px'; sh.style.marginTop='14px';
+    sh.textContent=title; area.appendChild(sh);
+    if(sub){ const s=document.createElement('div'); s.className='legend'; s.style.marginTop='0'; s.textContent=sub; area.appendChild(s); }
+    if(!list.length){ const e=document.createElement('div'); e.className='muted'; e.style.padding='6px 2px'; e.textContent='なし'; area.appendChild(e); return; }
+    let curCat=null, table=null;
+    list.forEach(it=>{
+      if(it.cat!==curCat){ curCat=it.cat;
+        const h=document.createElement('div'); h.style.cssText='font-size:11px;color:var(--sub);font-weight:700;margin:10px 0 2px'; h.textContent=catName[it.cat]||'その他';
+        const card=document.createElement('div'); card.className='card'; card.style.margin='4px 0';
+        table=document.createElement('table'); table.className='list';
+        card.appendChild(table); area.appendChild(h); area.appendChild(card);
+      }
+      table.appendChild(rowOf(it));
+    });
+  };
+  renderSection('今週の買い物（使い切り）', '生鮮品。その週で使い切る前提です。', fresh);
+  renderStorageGuide(area, fresh);
+  if(showStock){
+    renderSection('常備（在庫を確認、無ければ買う）', '米・調味料・缶・冷凍ストックなど。毎週は買いません。', stock);
+  }
 }
-/* 保存と消費の順番の案内（買い物リストの下） */
+/* 保存と消費の順番の案内（使い切り品が対象） */
 function renderStorageGuide(area, items){
   const {freeze,fridge,pantry}=C.groupByStorage(items);
-  const h=document.createElement('div'); h.className='cat'; h.textContent='保存と消費のコツ';
-  const card=document.createElement('div'); card.className='card'; card.style.margin='6px 0';
+  const h=document.createElement('div'); h.style.cssText='font-size:11px;color:var(--sub);font-weight:700;margin:12px 0 2px'; h.textContent='保存と消費のコツ';
+  const card=document.createElement('div'); card.className='card'; card.style.margin='4px 0';
   const nm=arr=>arr.map(x=>x.name).join('・')||'—';
   const fridgeNm=fridge.map(x=> x.perish===1? `${x.name}<span class="muted">(早めに)</span>` : x.name).join('・')||'—';
   card.innerHTML=`
@@ -1020,14 +1082,20 @@ function renderStorageGuide(area, items){
       <div style="margin-top:8px"><b>🧊 冷蔵（傷みやすい順に使う）</b><br><span class="muted" style="font-size:13px">${fridgeNm}</span></div>
       <div style="margin-top:8px"><b>🗄 常温</b><br><span class="muted" style="font-size:13px">${nm(pantry)}</span></div>
     </div>
-    <div class="legend" style="margin-top:10px">冷凍した肉・魚を使う日は、前夜に冷蔵庫へ移して解凍を（急ぐ時はレンジ解凍）。レシピの調理時間に解凍の手間が加わります。冷蔵の生鮮は「早めに」の品から先に使うと傷ませずに済みます。</div>`;
+    <div class="legend" style="margin-top:10px">冷凍した肉・魚を使う日は、前夜に冷蔵庫へ移して解凍を（急ぐ時はレンジ解凍）。冷蔵の生鮮は「早めに」の品から先に使うと傷ませずに済みます。</div>`;
   area.appendChild(h); area.appendChild(card);
 }
 $('#incSeason').addEventListener('change',renderShop);
+$('#btnClearChk').addEventListener('click',()=>{ state.shopChecked={}; persist(); renderShop(); toast('チェックを全部外しました'); });
 $('#btnCopy').addEventListener('click',()=>{
-  const inc=$('#incSeason').checked;
-  const {items,total}=C.buildShoppingList(state.plan,{includeSeason:inc, ingMap:ingMap()});
-  const txt='【今週の買い物リスト】\n'+items.map(it=>`□ ${it.name} ${it.packs}パック（必要 ${fmtNeed(it)}）  ${yen(it.cost)}`).join('\n')+`\n合計 約${yen(total)}`;
+  const im=ingMap();
+  const {items}=C.buildShoppingList(state.plan,{includeSeason:true, ingMap:im});
+  const fresh=items.filter(it=>C.ingClass(it)==='fresh');
+  const stock=items.filter(it=>C.ingClass(it)==='stock');
+  const line=it=>`□ ${it.name} ${buyText(it)}`;
+  const freshTotal=fresh.reduce((s,x)=>s+x.cost,0);
+  const txt='【今週の買い物（使い切り）】\n'+fresh.map(line).join('\n')
+    +`\n使い切り合計 約${yen(freshTotal)}\n\n【常備（在庫を確認）】\n`+stock.map(line).join('\n');
   if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toast('コピーしました')); }
   else toast('コピーに対応していません');
 });
@@ -1196,6 +1264,7 @@ $('#btnConfirm').addEventListener('click',()=>{
     weekly:Math.round(weekly), monthly:Math.round(C.monthlyProjection(weekly))});
   if(state.history.length>12) state.history=state.history.slice(-12);
   state.plan=C.chooseBestPlan({budget:state.settings.budget, ingMap:im, startSeed:(Date.now()>>>0)||1, avoid:recentAvoidSet(false)});
+  state.shopChecked={};
   persist(); renderMenu(); renderHistory();
   toast('確定して履歴に保存。来週分の新しい献立を作りました');
 });
