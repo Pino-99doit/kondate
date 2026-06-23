@@ -614,35 +614,67 @@ function applyPriceUpdate(ing, newPrice, dateStr, source){
 }
 
 /* ===== レシートOCRの解析・学習（β） ===== */
+/* ブランド名・略記から食材へ寄せる内蔵辞書。最長一致で誤マッチを防ぐ。
+   ※「トマト」のような広すぎるキーは入れない（ケチャップ等を巻き込むため）。 */
 const ALIASES = {
-  egg:['たまご','タマゴ','玉子'], chicken_b:['とりむね','鶏ムネ','ムネ肉','鶏胸','鳥むね'],
-  chicken_t:['とりもも','鶏モモ','モモ肉','鶏腿','鳥もも'], pork_k:['豚こま','豚コマ','豚切','こま切れ','ぶた'],
-  pork_b:['豚バラ','バラ肉'], mince:['ひき肉','ミンチ','挽肉','合挽','合いびき'], salmon:['さけ','サケ','鮭','生鮭','塩鮭'],
-  saba:['さば','サバ','鯖'], tuna:['ツナ','まぐろ','シーチキン'], tofu:['とうふ','豆腐','木綿','絹'], natto:['なっとう','ナットウ'],
-  onion:['たまねぎ','タマネギ','玉葱'], carrot:['にんじん','ニンジン','人参'],
+  egg:['たまご','タマゴ','玉子','たまご6'], chicken_b:['とりむね','鶏ムネ','ムネ肉','鶏胸','鳥むね','むね肉'],
+  chicken_t:['とりもも','鶏モモ','モモ肉','鶏腿','鳥もも','もも肉'], pork_k:['豚こま','豚コマ','豚切','こま切れ','こまぎれ','ぶた肉'],
+  pork_b:['豚バラ','バラ肉','豚ばら'], mince:['ひき肉','ミンチ','挽肉','合挽','合いびき','豚挽','豚ひき','鶏ひき'],
+  salmon:['さけ','サケ','生鮭','塩鮭','甘塩鮭'], saba:['さば','サバ','塩さば','塩サバ'],
+  tuna:['ツナ','まぐろ','シーチキン','ツナ缶'], tofu:['とうふ','豆腐','木綿','絹','絹とうふ','絹ごし','木綿とうふ'],
+  natto:['なっとう','ナットウ','納豆','極小','ひきわり','小粒'],
+  onion:['たまねぎ','タマネギ','玉葱','玉ねぎ'], carrot:['にんじん','ニンジン','人参'],
   potato:['じゃがいも','ジャガイモ','馬鈴薯','メークイン','男爵'], cabbage:['きゃべつ','キャベツ'],
   moyashi:['もやし','モヤシ'], spinach:['ほうれん草','ホウレンソウ','ほうれんそう'], komatsu:['小松菜','こまつな','コマツナ'],
-  broccoli:['ブロッコリー','ブロッコリ'], minitomato:['ミニトマト','プチトマト','トマト'], piman:['ピーマン'],
-  negi:['ねぎ','ネギ','長ねぎ','長ネギ','葱'], shimeji:['しめじ','シメジ'], daikon:['だいこん','大根','ダイコン'],
-  mixveg:['ミックスベジ','冷凍野菜'], milk:['牛乳','ミルク'], yogurt:['ヨーグルト'], cheese:['チーズ','スライスチーズ'],
-  banana:['バナナ'], rice:['こめ','お米','コメ','無洗米','精米'], bread:['食パン','パン'], pasta:['パスタ','スパゲ','マカロニ'],
-  udon:['うどん','ウドン'], oats:['オートミール','オーツ']
+  broccoli:['ブロッコリー','ブロッコリ'], minitomato:['ミニトマト','プチトマト'], piman:['ピーマン'],
+  negi:['長ねぎ','長ネギ','青ねぎ','小ねぎ','ねぎ','ネギ'], shimeji:['しめじ','シメジ','ぶなしめじ','本しめじ'],
+  daikon:['だいこん','大根','ダイコン'], mixveg:['ミックスベジ','冷凍野菜','ミックスベジタブル'],
+  milk:['牛乳','ミルク'], yogurt:['ヨーグルト','ﾖｰｸﾞﾙﾄ','YG','ＹＧ'], cheese:['スライスチーズ','とろけるスライス','とろける','チーズ'],
+  banana:['バナナ'], rice:['お米','無洗米','精米','コシヒカリ','あきたこまち','ゆめぴりか','ななつぼし'],
+  bread:['食パン','食ぱん'], pasta:['パスタ','スパゲ','マカロニ','スパ'],
+  udon:['うどん','ウドン'], oats:['オートミール','オーツ'],
+  /* 調味料・常備品（ブランド名に寄せる） */
+  miso:['みそ','味噌','液みそ','料亭の味','合わせみそ','こうじみそ'], soy:['しょうゆ','醤油','こいくち','うすくち'],
+  sugar:['砂糖','上白糖','グラニュー'], salt:['食塩','あら塩','精製塩'], sesoil:['ごま油','ごま香油','胡麻油','香油'],
+  oil:['サラダ油','キャノーラ','なたね油','こめ油'], mayo:['マヨネーズ','マヨ'], ketchup:['ケチャップ','トマトケチ','ケチャ'],
+  ponzu:['ポン酢','ぽん酢'], mentsuyu:['めんつゆ','つゆ','麺つゆ'], curry:['カレールー','カレールウ','ルウ','ルー'],
+  gara:['がらスープ','ガラスープ','鶏ガラ','鳥ガラ','ガラ'], garlic:['にんにく','ニンニク','大蒜'],
+  ginger:['しょうが','生姜','ショウガ'], dashi:['だしの素','顆粒だし','ほんだし','和風だし','出汁','だし'],
+  nori:['のり','海苔','焼のり','焼海苔'], wakame:['わかめ','ワカメ','若布']
 };
+/* 価格らしい数字を拾う（末尾に g/個/点/% などが付く数字や日付は価格としない）。 */
 function parseReceiptPrice(line){
-  const nums=[...String(line).matchAll(/(\d[\d,]{0,6})/g)].map(m=>parseInt(m[1].replace(/,/g,''),10)).filter(v=>v>=10&&v<=99999);
-  return nums.length?nums[nums.length-1]:null;
+  const s=String(line); const out=[];
+  const re=/(\d[\d,]{0,6})(?!\s*[\dgGｇmlLℓ個枚本点％%:\/年月日])/g; let m;
+  while((m=re.exec(s))){ const v=parseInt(m[1].replace(/,/g,''),10); if(v>=10 && v<=99999) out.push(v); }
+  return out.length ? out[out.length-1] : null;
+}
+/* 商品でない行（小計・税・電話・日付・惣菜など）を除外する判定 */
+const RECEIPT_SKIP=/小計|合計|総額|お買上|点数|消費税|外税|内税|税率|軽減|対象|登録番号|取引|決済|現金|預|釣|つり|ポイント|残高|値引|割引|レジ袋|クレジット|電話|ＴＥＬ|TEL|領収|発行|責|営業|印は|釣銭|店(?=$|\s)/;
+const RECEIPT_PREPARED=/炊き込|弁当|惣菜|寿司|サンド|おにぎり|から揚|唐揚|コロッケ|餃子|お好み|焼きそば弁/;
+function isReceiptSkip(t){
+  if(RECEIPT_SKIP.test(t)) return true;
+  if(RECEIPT_PREPARED.test(t)) return true;
+  if(/\d{4}年|\d{1,2}月\d{1,2}日|\d{1,2}:\d{2}/.test(t)) return true;   // 日付・時刻
+  if(/^[\s\dTNo.,:#\/\-¥*※●]+$/.test(t)) return true;                  // 数字・記号のみ（電話/番号/バーコード）
+  if(!/[ぁ-んァ-ンー一-龥ｦ-ﾟ]/.test(t)) return true;                    // 日本語（商品名）が無い
+  if(/^\s*[*※●・]?\s*\d+\s*個/.test(t)) return true;                   // 「2個 76」など数量だけの行
+  return false;
 }
 function parseReceiptLines(text){
   return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean)
+    .filter(t=>!isReceiptSkip(t))
     .map(t=>({text:t, price:parseReceiptPrice(t)})).filter(o=>o.price!=null);
 }
+/* 行に一致する食材idを返す。複数候補がある時は「一致したキーが最長＝より具体的」なものを採用。 */
 function matchReceiptLine(line, ingredients, learned){
   learned = learned || {};
+  const s=String(line); let best=null, bestLen=0;   // 最長一致（より具体的なキー）を採用
   for(const ing of ingredients){
     const keys=[ing.name].concat(ALIASES[ing.id]||[]).concat(learned[ing.id]||[]);
-    if(keys.some(k=>k && k.length>=1 && line.includes(k))) return ing.id;
+    for(const k of keys){ if(k && k.length>bestLen && s.includes(k)){ best=ing.id; bestLen=k.length; } }
   }
-  return null;
+  return best;
 }
 function parseReceiptText(text, ingredients, learned){
   const out=[], seen={};
@@ -754,7 +786,10 @@ root.Core = api;
     <div class="card">
       <div class="muted" style="font-weight:700;color:var(--ink)">レシートを登録して価格を最新化</div>
       <div class="legend">買い物のレシートを撮影し、買った品の金額を入れて保存。次回からその価格が使われ、グラフにも反映されます。</div>
-      <input type="file" id="receiptFile" accept="image/*" capture="environment" style="margin:10px 0">
+      <div class="row" style="gap:8px;margin:10px 0">
+        <label class="ghost sm" style="flex:1;text-align:center;cursor:pointer">📷 撮影する<input type="file" id="receiptCam" accept="image/*" capture="environment" style="display:none"></label>
+        <label class="ghost sm" style="flex:1;text-align:center;cursor:pointer">🖼 写真を選ぶ<input type="file" id="receiptFile" accept="image/*" style="display:none"></label>
+      </div>
       <img id="receiptPreview" class="thumb" style="display:none" alt="レシート">
       <button id="btnOcr" class="ghost sm" style="display:none;margin:6px 0">写真から金額を自動入力(β)</button>
       <div id="ocrStatus" class="legend"></div>
@@ -1185,8 +1220,8 @@ function renderReceiptTab(){
   renderReceiptHistory();
 }
 $('#ingSearch').addEventListener('input',renderReceiptTab);
-$('#receiptFile').addEventListener('change',e=>{
-  const f=e.target.files[0]; if(!f) return;
+function handleReceiptFile(f){
+  if(!f) return;
   const reader=new FileReader();
   reader.onload=ev=>{
     const img=new Image();
@@ -1203,7 +1238,9 @@ $('#receiptFile').addEventListener('change',e=>{
     img.src=ev.target.result;
   };
   reader.readAsDataURL(f);
-});
+}
+$('#receiptFile').addEventListener('change',e=>handleReceiptFile(e.target.files[0]));
+$('#receiptCam').addEventListener('change',e=>handleReceiptFile(e.target.files[0]));
 $('#btnSaveReceipt').addEventListener('click',()=>{
   const inputs=$('#receiptList').querySelectorAll('input');
   const updated=[]; const im=ingMap();
@@ -1216,7 +1253,7 @@ $('#btnSaveReceipt').addEventListener('click',()=>{
   state.receipts.unshift({date:todayStr(), image:receiptImage, items:updated});
   persist();
   inputs.forEach(i=>i.value=''); receiptImage=null;
-  $('#receiptPreview').style.display='none'; $('#receiptFile').value='';
+  $('#receiptPreview').style.display='none'; $('#receiptFile').value=''; $('#receiptCam').value='';
   renderReceiptTab(); renderMenu();
   toast(updated.length+'件の価格を最新化しました');
 });
