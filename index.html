@@ -652,17 +652,28 @@ function parseReceiptPrice(line){
 /* 商品でない行（小計・税・電話・日付・惣菜など）を除外する判定 */
 const RECEIPT_SKIP=/小計|合計|総額|お買上|点数|消費税|外税|内税|税率|軽減|対象|登録番号|取引|決済|現金|預|釣|つり|ポイント|残高|値引|割引|レジ袋|クレジット|電話|ＴＥＬ|TEL|領収|発行|責|営業|印は|釣銭|店(?=$|\s)/;
 const RECEIPT_PREPARED=/炊き込|弁当|惣菜|寿司|サンド|おにぎり|から揚|唐揚|コロッケ|餃子|お好み|焼きそば弁/;
+/* OCRの正規化: 全角英数→半角、行頭の「外8/外 8」等のマーカー除去、日本語の字間スペース詰め。
+   OCRが「ス マ ホ 決済」「外 8」のように1字ずつ離して読む問題に対処する。 */
+function normalizeReceipt(text){
+  return String(text||'').split(/\r?\n/).map(line=>{
+    let t=line.replace(/[Ａ-Ｚａ-ｚ０-９]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).trim();
+    t=t.replace(/^[*※●・\s]*外\s*\d\s*/,'').replace(/^[*※●・]\s*/,'');         // 行頭マーカー除去
+    t=t.replace(/([ぁ-ヿ一-龯ｦ-ﾟ])[ \u3000]+(?=[ぁ-ヿ一-龯ｦ-ﾟ])/g,'$1');       // 日本語どうしの字間スペースを詰める
+    return t.trim();
+  }).join('\n');
+}
 function isReceiptSkip(t){
   if(RECEIPT_SKIP.test(t)) return true;
   if(RECEIPT_PREPARED.test(t)) return true;
   if(/\d{4}年|\d{1,2}月\d{1,2}日|\d{1,2}:\d{2}/.test(t)) return true;   // 日付・時刻
-  if(/^[\s\dTNo.,:#\/\-¥*※●]+$/.test(t)) return true;                  // 数字・記号のみ（電話/番号/バーコード）
-  if(!/[ぁ-んァ-ンー一-龥ｦ-ﾟ]/.test(t)) return true;                    // 日本語（商品名）が無い
   if(/^\s*[*※●・]?\s*\d+\s*個/.test(t)) return true;                   // 「2個 76」など数量だけの行
+  const hasJP=/[ぁ-んァ-ンー一-龥ｦ-ﾟ]/.test(t);
+  const hasWord=/[A-Za-z]{3,}/.test(t);
+  if(!hasJP && !hasWord) return true;     // 日本語も英単語も無い＝電話/登録番号/バーコード等は除外。化けた英字商品行は候補に残す
   return false;
 }
 function parseReceiptLines(text){
-  return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean)
+  return normalizeReceipt(text).split(/\r?\n/).map(s=>s.trim()).filter(Boolean)
     .filter(t=>!isReceiptSkip(t))
     .map(t=>({text:t, price:parseReceiptPrice(t)})).filter(o=>o.price!=null);
 }
@@ -694,7 +705,7 @@ function learnKeyFromLine(line){
 const api = {INGREDIENTS,RECIPES,ING,REC,BREAKFASTS,DINNERS,TARGET,
   consumedCost,recipeNutrition,dayNutrition,evalNutrient,dayStatus,dayPenalty,
   dayComponents,dayBalanced,generatePlan,weeklyConsumedCost,weeklyPenalty,weeklyNutrition,
-  monthlyProjection,chooseBestPlan,buildShoppingList,groupByStorage,recipeThaw,ingClass,fmtCook,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,ALIASES,STORAGE};
+  monthlyProjection,chooseBestPlan,buildShoppingList,groupByStorage,recipeThaw,ingClass,fmtCook,applyPriceUpdate,mulberry32,parseReceiptText,parseReceiptLines,matchReceiptLine,learnKeyFromLine,normalizeReceipt,ALIASES,STORAGE};
 if(typeof module!=='undefined' && module.exports){ module.exports=api; }
 root.Core = api;
 })(typeof window!=='undefined'?window:globalThis);
@@ -1137,14 +1148,26 @@ $('#btnCopy').addEventListener('click',()=>{
 
 /* ---------- 価格グラフ ---------- */
 let _dpr=window.devicePixelRatio||1;
-function _setupCanvas(cv){ const w=cv.clientWidth||300, h=parseInt(cv.getAttribute('height'))||200;
-  cv.width=w*_dpr; cv.height=h*_dpr; const ctx=cv.getContext('2d'); ctx.setTransform(_dpr,0,0,_dpr,0,0); ctx.clearRect(0,0,w,h); return {ctx,w,h}; }
+function _setupCanvas(cv){
+  const w=cv.clientWidth||(cv.parentElement&&cv.parentElement.clientWidth)||320;
+  const h=parseInt(cv.getAttribute('height'))||200;
+  cv.style.width=w+'px'; cv.style.height=h+'px';                 // 表示サイズを固定（画面はみ出し防止）
+  cv.width=Math.round(w*_dpr); cv.height=Math.round(h*_dpr);
+  const ctx=cv.getContext('2d'); ctx.setTransform(_dpr,0,0,_dpr,0,0); ctx.clearRect(0,0,w,h); return {ctx,w,h};
+}
+/* 目盛り幅を切りの良い数字(10/20/25/50/100…)に丸める */
+function niceStep(raw){ raw=Math.max(raw,1); const pow=Math.pow(10,Math.floor(Math.log10(raw))); const n=raw/pow; const m=n<1.5?1:n<3?2:n<7?5:10; return m*pow; }
 function drawLine(cv,labels,data,color,flags){ const {ctx,w,h}=_setupCanvas(cv); if(!data.length) return;
   const padL=46,padR=10,padT=10,padB=22, cw=w-padL-padR, ch=h-padT-padB;
-  let mn=Math.min(...data), mx=Math.max(...data); if(mn===mx){ mn=Math.max(0,mn*0.9); mx=mx*1.1||1; }
+  // Y軸レンジ: 変動が小さくても最低幅を確保し、余白を足して、目盛りを丸める（線が垂直に潰れるのを防ぐ）
+  let mn=Math.min(...data), mx=Math.max(...data); const mid=(mn+mx)/2;
+  const minSpan=Math.max(40, mid*0.15);            // 最低レンジ＝¥40か中央値の15%の大きい方
+  if(mx-mn<minSpan){ mn=mid-minSpan/2; mx=mid+minSpan/2; } else { const pad=(mx-mn)*0.15; mn-=pad; mx+=pad; }
+  mn=Math.max(0,mn);
+  const step=niceStep((mx-mn)/3); mn=Math.floor(mn/step)*step; mx=Math.ceil(mx/step)*step;
   const X=i=>padL+(data.length===1?cw/2:cw*i/(data.length-1)), Y=v=>padT+ch-(v-mn)/(mx-mn||1)*ch;
   ctx.strokeStyle='#e6e9ee'; ctx.fillStyle='#67727e'; ctx.font='10px sans-serif'; ctx.textAlign='right';
-  for(let g=0;g<=3;g++){ const val=mn+(mx-mn)*g/3, yy=Y(val); ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(w-padR,yy); ctx.stroke(); ctx.fillText('¥'+Math.round(val),padL-5,yy+3); }
+  for(let val=mn; val<=mx+0.5; val+=step){ const yy=Y(val); ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(w-padR,yy); ctx.stroke(); ctx.fillText('¥'+Math.round(val),padL-5,yy+3); }
   ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
   data.forEach((v,i)=>{ const xx=X(i),yy=Y(v); i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy); }); ctx.stroke();
   data.forEach((v,i)=>{ ctx.beginPath(); ctx.fillStyle=(flags&&flags[i])?'#9aa6b2':color; ctx.arc(X(i),Y(v),3.5,0,Math.PI*2); ctx.fill(); });
